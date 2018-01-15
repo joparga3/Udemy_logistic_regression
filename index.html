@@ -16,56 +16,28 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-pre, code { background-color: #f8f8f8; }
-code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code > span.dt { color: #204a87; } /* DataType */
-code > span.dv { color: #0000cf; } /* DecVal */
-code > span.bn { color: #0000cf; } /* BaseN */
-code > span.fl { color: #0000cf; } /* Float */
-code > span.ch { color: #4e9a06; } /* Char */
-code > span.st { color: #4e9a06; } /* String */
-code > span.co { color: #8f5902; font-style: italic; } /* Comment */
-code > span.ot { color: #8f5902; } /* Other */
-code > span.al { color: #ef2929; } /* Alert */
-code > span.fu { color: #000000; } /* Function */
-code > span.er { color: #a40000; font-weight: bold; } /* Error */
-code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #000000; } /* Constant */
-code > span.sc { color: #000000; } /* SpecialChar */
-code > span.vs { color: #4e9a06; } /* VerbatimString */
-code > span.ss { color: #4e9a06; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #000000; } /* Variable */
-code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code > span.ex { } /* Extension */
-code > span.at { color: #c4a000; } /* Attribute */
-code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-</style>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
 
 
 <style type="text/css">
@@ -126,34 +98,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 52px;
+  padding-top: 51px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 57px;
-  margin-top: -57px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 
 .section h2 {
-  padding-top: 57px;
-  margin-top: -57px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h3 {
-  padding-top: 57px;
-  margin-top: -57px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h4 {
-  padding-top: 57px;
-  margin-top: -57px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h5 {
-  padding-top: 57px;
-  margin-top: -57px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h6 {
-  padding-top: 57px;
-  margin-top: -57px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 </style>
 
@@ -309,7 +281,7 @@ body {
 text-align: justify}
 </style>
 <p><br></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(knitr)</code></pre></div>
+<pre class="r"><code>library(knitr)</code></pre>
 <p>In the previous section we learnt how to model and predict continuous response variables. In this section we will learn how to deal with categorial variables:</p>
 <ul>
 <li>The concepts</li>
@@ -330,18 +302,19 @@ text-align: justify}
 <p>In order to achieve this “s” shape, the log odds of the particular event we are trying to predict, is modelled. The aim of this section is not to demostrate the equations (remember we are doing an express course), so I will leave below the equations:</p>
 <p><img src="images/2.PNG" width="1324" /></p>
 <p>This equation can be implemented using the <strong>glm</strong> function by setting one of the arguments to <em>binomial</em>. In addition, when predicting, we need to ensure we put the <em>type=response</em>, if not, we will be calculating the log odds of P (Z values) instead of the actual probability. Anyway we will see this in the following sections.</p>
+<p><br></p>
 </div>
 <div id="implementing-a-simple-logistic-regression" class="section level1">
 <h1><span class="header-section-number">2</span> Implementing a simple logistic regression</h1>
 <p>We will be using the <strong>BreastCancer</strong> dataset from the <strong>mlbenc</strong> package. The goal for this logistic regression model will be to predict if the cases in the dataset are benign or not. In this case, the <em>class</em>, is the response variable, and the rest of the variables are factor variables.</p>
 <div id="getting-the-data" class="section level2">
 <h2><span class="header-section-number">2.1</span> Getting the data</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">require</span>(mlbench)
-<span class="kw">data</span>(BreastCancer, <span class="dt">package =</span> <span class="st">&#39;mlbench&#39;</span>)
-bc =<span class="st"> </span>BreastCancer[<span class="kw">complete.cases</span>(BreastCancer), ]
+<pre class="r"><code>require(mlbench)
+data(BreastCancer, package = &#39;mlbench&#39;)
+bc = BreastCancer[complete.cases(BreastCancer), ]
 
-<span class="co"># Checking the dataset</span>
-<span class="kw">str</span>(bc)</code></pre></div>
+# Checking the dataset
+str(bc)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    683 obs. of  11 variables:
 ##  $ Id             : chr  &quot;1000025&quot; &quot;1002945&quot; &quot;1015425&quot; &quot;1016277&quot; ...
 ##  $ Cl.thickness   : Ord.factor w/ 10 levels &quot;1&quot;&lt;&quot;2&quot;&lt;&quot;3&quot;&lt;&quot;4&quot;&lt;..: 5 5 3 6 4 8 1 2 2 4 ...
@@ -354,7 +327,7 @@ bc =<span class="st"> </span>BreastCancer[<span class="kw">complete.cases</span>
 ##  $ Normal.nucleoli: Factor w/ 10 levels &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,..: 1 2 1 7 1 7 1 1 1 1 ...
 ##  $ Mitoses        : Factor w/ 9 levels &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,..: 1 1 1 1 1 1 1 1 5 1 ...
 ##  $ Class          : Factor w/ 2 levels &quot;benign&quot;,&quot;malignant&quot;: 1 1 1 1 1 2 1 1 1 1 ...</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(bc)</code></pre></div>
+<pre class="r"><code>summary(bc)</code></pre>
 <pre><code>##       Id             Cl.thickness   Cell.size     Cell.shape  Marg.adhesion  Epith.c.size  Bare.nuclei   Bl.cromatin  Normal.nucleoli    Mitoses          Class    
 ##  Length:683         1      :139   1      :373   1      :346   1      :393   2      :376   1      :402   3      :161   1      :432     1      :563   benign   :444  
 ##  Class :character   5      :128   10     : 67   2      : 58   2      : 58   3      : 71   10     :132   2      :160   10     : 60     2      : 35   malignant:239  
@@ -372,17 +345,17 @@ bc =<span class="st"> </span>BreastCancer[<span class="kw">complete.cases</span>
 <li>The first variables seem to be ordered factors, so we could change these to numeric. To be clear, to do this, we need to be careful and first transform the factor into a character, and then into a number. If not, the values can be messed up. Anyway, this is an optional step.</li>
 <li>Change the name of the class to a factor of 0 and 1</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Deleting first column</span>
-bc =<span class="st"> </span>bc[, -<span class="kw">which</span>(<span class="kw">colnames</span>(bc) ==<span class="st"> &quot;Id&quot;</span>)]
+<pre class="r"><code># Deleting first column
+bc = bc[, -which(colnames(bc) == &quot;Id&quot;)]
 
-<span class="co"># Transforming ordered factors into numeric </span>
-for(i in <span class="dv">1</span>:<span class="dv">9</span>){
-  bc[,i] =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">as.character</span>(bc[,i]))
+# Transforming ordered factors into numeric 
+for(i in 1:9){
+  bc[,i] = as.numeric(as.character(bc[,i]))
 }
 
-<span class="co"># Changing naming of the response variable</span>
-bc$Class =<span class="st"> </span><span class="kw">ifelse</span>(bc$Class ==<span class="st"> &quot;malignant&quot;</span>,<span class="dv">1</span>,<span class="dv">0</span>)
-bc$Class =<span class="st"> </span><span class="kw">factor</span>(bc$Class, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</code></pre></div>
+# Changing naming of the response variable
+bc$Class = ifelse(bc$Class == &quot;malignant&quot;,1,0)
+bc$Class = factor(bc$Class, levels = c(0,1))</code></pre>
 </div>
 <div id="splitting" class="section level2">
 <h2><span class="header-section-number">2.3</span> Splitting</h2>
@@ -394,38 +367,38 @@ bc$Class =<span class="st"> </span><span class="kw">factor</span>(bc$Class, <spa
 <li>Upsizing is the opposite. Taking the minority class and randomnly duplicating cases, until you reach approximantely the number of cases in the majority class.</li>
 <li>HYbrid is a bit more complex, but basically there are a couple of widely used algorithms for this: the SMOTE and the ROSE algorithm.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(bc$Class)</code></pre></div>
+<pre class="r"><code>table(bc$Class)</code></pre>
 <pre><code>## 
 ##   0   1 
 ## 444 239</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Creating Train and Test data using the caret package</span>
-<span class="kw">library</span>(caret)
+<pre class="r"><code># Creating Train and Test data using the caret package
+library(caret)
 
-<span class="co"># Define the not in function</span>
-<span class="st">&#39;%ni%&#39;</span> =<span class="st"> </span><span class="kw">Negate</span>(<span class="st">&#39;%in%&#39;</span>)
+# Define the not in function
+&#39;%ni%&#39; = Negate(&#39;%in%&#39;)
 
-<span class="co"># Prevent priting scientific notation</span>
-<span class="kw">options</span>(<span class="dt">scipen =</span> <span class="dv">999</span>)
+# Prevent priting scientific notation
+options(scipen = 999)
 
-<span class="co"># Prep train and test </span>
-<span class="kw">set.seed</span>(<span class="dv">100</span>)
-trainDataIndex =<span class="st"> </span><span class="kw">createDataPartition</span>(bc$Class, <span class="dt">p =</span> <span class="fl">0.7</span>, <span class="dt">list =</span> F)
-trainData =<span class="st"> </span>bc[trainDataIndex,]
-testData =<span class="st"> </span>bc[-trainDataIndex,]
+# Prep train and test 
+set.seed(100)
+trainDataIndex = createDataPartition(bc$Class, p = 0.7, list = F)
+trainData = bc[trainDataIndex,]
+testData = bc[-trainDataIndex,]
 
-<span class="co"># Downsampling</span>
-down_train =<span class="st"> </span><span class="kw">downSample</span>(<span class="dt">x =</span> trainData[, <span class="kw">colnames</span>(trainData) %ni%<span class="st"> &quot;Class&quot;</span>]
-                        , <span class="dt">y =</span> trainData$Class)
+# Downsampling
+down_train = downSample(x = trainData[, colnames(trainData) %ni% &quot;Class&quot;]
+                        , y = trainData$Class)
 
-<span class="kw">table</span>(down_train$Class)</code></pre></div>
+table(down_train$Class)</code></pre>
 <pre><code>## 
 ##   0   1 
 ## 168 168</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Upsampling</span>
-up_train =<span class="st"> </span><span class="kw">upSample</span>(<span class="dt">x =</span> trainData[, <span class="kw">colnames</span>(trainData) %ni%<span class="st"> &quot;Class&quot;</span>]
-                        , <span class="dt">y =</span> trainData$Class)
+<pre class="r"><code># Upsampling
+up_train = upSample(x = trainData[, colnames(trainData) %ni% &quot;Class&quot;]
+                        , y = trainData$Class)
 
-<span class="kw">table</span>(up_train$Class)</code></pre></div>
+table(up_train$Class)</code></pre>
 <pre><code>## 
 ##   0   1 
 ## 311 311</code></pre>
@@ -433,9 +406,9 @@ up_train =<span class="st"> </span><span class="kw">upSample</span>(<span class=
 <div id="first-model-using-the-down-sample-set" class="section level2">
 <h2><span class="header-section-number">2.4</span> First model using the down sample set</h2>
 <p>We use the down sample train data to model our first model. Then we can test it on the initial train/test datasets.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Building the model with the down sized data. Ensure you add family binomial</span>
-logitmod =<span class="st"> </span><span class="kw">glm</span>(Class ~<span class="st"> </span>Cl.thickness +<span class="st"> </span>Cell.size +<span class="st"> </span>Cell.shape, <span class="dt">family =</span> binomial, <span class="dt">data =</span> down_train)
-<span class="kw">summary</span>(logitmod)</code></pre></div>
+<pre class="r"><code># Building the model with the down sized data. Ensure you add family binomial
+logitmod = glm(Class ~ Cl.thickness + Cell.size + Cell.shape, family = binomial, data = down_train)
+summary(logitmod)</code></pre>
 <pre><code>## 
 ## Call:
 ## glm(formula = Class ~ Cl.thickness + Cell.size + Cell.shape, 
@@ -461,27 +434,27 @@ logitmod =<span class="st"> </span><span class="kw">glm</span>(Class ~<span clas
 ## AIC: 98.23
 ## 
 ## Number of Fisher Scoring iterations: 8</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Predict the probability of the event for each observation</span>
-pred =<span class="st"> </span><span class="kw">predict</span>(logitmod, <span class="dt">newdata =</span> testData, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)
-<span class="kw">head</span>(pred)</code></pre></div>
+<pre class="r"><code># Predict the probability of the event for each observation
+pred = predict(logitmod, newdata = testData, type = &quot;response&quot;)
+head(pred)</code></pre>
 <pre><code>##          1          2          5          8         13         15 
 ## 0.04699168 0.85436794 0.02805903 0.02263590 0.54396155 0.99842756</code></pre>
 <p>As you can see, we have calculated probabilites of each record. What we haven’t assigned, is those probabilites to a certain class. Common practice is to start simple and have a treshold of 0.5, meaning that anything below that will get assigned to 0 and anything above, will get assigned to 1. We will do this, but the threshold is something we could play with depending on our goal metrics. We will talk about this later.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Converting the probabilites to class predictions</span>
-y_pred_num =<span class="st"> </span><span class="kw">ifelse</span>(pred &gt;<span class="st"> </span><span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)
-y_pred =<span class="st"> </span><span class="kw">factor</span>(y_pred_num, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))
-y_act =<span class="st"> </span>testData$Class</code></pre></div>
+<pre class="r"><code># Converting the probabilites to class predictions
+y_pred_num = ifelse(pred &gt; 0.5, 1, 0)
+y_pred = factor(y_pred_num, levels = c(0,1))
+y_act = testData$Class</code></pre>
 </div>
 <div id="confusion-matrix-for-this-first-model" class="section level2">
 <h2><span class="header-section-number">2.5</span> Confusion matrix for this first model</h2>
 <p>You can see that the first model has initially an accuracy of 94%. That is encouraging, but let’s think about this for a moment. If we had a problem where we had 100 records, being 99 of those benign and only 1 cancer, then we could have a 99% accuracy if we predicted that all of them where benign (ie we would be only making one error). However, that error is the one that we actually want to predict, therefore, accuracy is not the metric we want to use.</p>
 <p>That is why we compute the confusion matrix. In the confusion metric we can see: * Accuracy * Sensitivity, which represents the proportion of actual positive events that the model predicted as a positive event. In this case, 70/(70+1) * Specificity, is the proportion of non positive events (ie class 0) that the model predicted correctly, 122/(122+11)</p>
 <p>In our case, specificity would be very important to us, and we see that out of 71 cases, we are actually predicting 70 correctly! Quite a good start.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Accuracy</span>
-<span class="kw">mean</span>(y_pred ==<span class="st"> </span>y_act)</code></pre></div>
+<pre class="r"><code># Accuracy
+mean(y_pred == y_act)</code></pre>
 <pre><code>## [1] 0.9411765</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Confusion matrix</span>
-caret::<span class="kw">confusionMatrix</span>(y_pred, y_act, <span class="dt">positive =</span> <span class="st">&quot;1&quot;</span>)</code></pre></div>
+<pre class="r"><code># Confusion matrix
+caret::confusionMatrix(y_pred, y_act, positive = &quot;1&quot;)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
@@ -509,11 +482,11 @@ caret::<span class="kw">confusionMatrix</span>(y_pred, y_act, <span class="dt">p
 ##        &#39;Positive&#39; Class : 1                    
 ## </code></pre>
 <p>Remember how we assigned a threshold before to define a class based on the probability we calculated? Well, this threshold is want will determine the metrics we just mentioned. As an example, imagine that we were very conservative, and we want to flag any possible case of cancer if we detect the slightest symptom, then our threshold would be quite low. This would surely increase our sensitivity, probably making it 100%, but we would making more errors with the non-cancer cases, ie reducing specificity. Let’s check that very quickly below.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y_pred_num1 =<span class="st"> </span><span class="kw">ifelse</span>(pred &gt;<span class="st"> </span><span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">0</span>)
-y_pred1 =<span class="st"> </span><span class="kw">factor</span>(y_pred_num1, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))
-y_act1 =<span class="st"> </span>testData$Class
+<pre class="r"><code>y_pred_num1 = ifelse(pred &gt; 0.1, 1, 0)
+y_pred1 = factor(y_pred_num1, levels = c(0,1))
+y_act1 = testData$Class
 
-caret::<span class="kw">confusionMatrix</span>(y_pred1, y_act1, <span class="dt">positive =</span> <span class="st">&quot;1&quot;</span>)</code></pre></div>
+caret::confusionMatrix(y_pred1, y_act1, positive = &quot;1&quot;)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
@@ -549,14 +522,15 @@ caret::<span class="kw">confusionMatrix</span>(y_pred1, y_act1, <span class="dt"
 <li>One plot we can make is to use te area under the ROC curve. This is a proxy for accuracy.</li>
 <li>The other plot is adding the threshold.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(InformationValue)
-<span class="kw">plotROC</span>(y_act, pred)</code></pre></div>
+<pre class="r"><code>library(InformationValue)
+plotROC(y_act, pred)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-11-1.png" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ROCR)
-ROCRpred =<span class="st"> </span><span class="kw">prediction</span>(pred, y_act)
-ROCRperf =<span class="st"> </span><span class="kw">performance</span>(ROCRpred, <span class="st">&quot;tpr&quot;</span>, <span class="st">&quot;fpr&quot;</span>)
-<span class="kw">plot</span>(ROCRperf, <span class="dt">colorize =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="r"><code>library(ROCR)
+ROCRpred = prediction(pred, y_act)
+ROCRperf = performance(ROCRpred, &quot;tpr&quot;, &quot;fpr&quot;)
+plot(ROCRperf, colorize = TRUE)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-11-2.png" /><!-- --></p>
+<p><br></p>
 </div>
 </div>
 <div id="naive-bayes-classifier" class="section level1">
@@ -593,9 +567,9 @@ ROCRperf =<span class="st"> </span><span class="kw">performance</span>(ROCRpred,
 <h2><span class="header-section-number">3.5</span> Implemeting in R</h2>
 <div id="loading-the-data" class="section level3">
 <h3><span class="header-section-number">3.5.1</span> Loading the data</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(Vehicle, <span class="dt">package =</span> <span class="st">&quot;mlbench&quot;</span>)
+<pre class="r"><code>data(Vehicle, package = &quot;mlbench&quot;)
 
-<span class="kw">str</span>(Vehicle)</code></pre></div>
+str(Vehicle)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    846 obs. of  19 variables:
 ##  $ Comp        : num  95 91 104 93 85 107 97 90 86 93 ...
 ##  $ Circ        : num  48 41 50 41 44 57 43 43 34 44 ...
@@ -616,7 +590,7 @@ ROCRperf =<span class="st"> </span><span class="kw">performance</span>(ROCRpred,
 ##  $ Kurt.Maxis  : num  187 189 188 199 180 181 200 193 200 195 ...
 ##  $ Holl.Ra     : num  197 199 196 207 183 183 204 202 208 204 ...
 ##  $ Class       : Factor w/ 4 levels &quot;bus&quot;,&quot;opel&quot;,&quot;saab&quot;,..: 4 4 3 4 1 1 1 4 4 3 ...</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(Vehicle)</code></pre></div>
+<pre class="r"><code>summary(Vehicle)</code></pre>
 <pre><code>##       Comp             Circ           D.Circ           Rad.Ra        Pr.Axis.Ra        Max.L.Ra         Scat.Ra          Elong        Pr.Axis.Rect     Max.L.Rect   Sc.Var.Maxis    Sc.Var.maxis        Ra.Gyr        Skew.Maxis       Skew.maxis    
 ##  Min.   : 73.00   Min.   :33.00   Min.   : 40.00   Min.   :104.0   Min.   : 47.00   Min.   : 2.000   Min.   :112.0   Min.   :26.00   Min.   :17.00   Min.   :118   Min.   :130.0   Min.   : 184.0   Min.   :109.0   Min.   : 59.00   Min.   : 0.000  
 ##  1st Qu.: 87.00   1st Qu.:40.00   1st Qu.: 70.00   1st Qu.:141.0   1st Qu.: 57.00   1st Qu.: 7.000   1st Qu.:146.2   1st Qu.:33.00   1st Qu.:19.00   1st Qu.:137   1st Qu.:167.0   1st Qu.: 318.2   1st Qu.:149.0   1st Qu.: 67.00   1st Qu.: 2.000  
@@ -635,23 +609,23 @@ ROCRperf =<span class="st"> </span><span class="kw">performance</span>(ROCRpred,
 <div id="small-checks-on-the-data---featureplot" class="section level3">
 <h3><span class="header-section-number">3.5.2</span> Small checks on the data - featurePlot</h3>
 <p>Usually, the useful feature is the one that has significant shifts in the mean value across the different classes. Think it the other way round, if all vehicle classes output the same mean for a variable, then that variable is not going to be very helpful in differentiating amongst the cars. In the plot below you can check Sc.Var.maxis is a good candidate variable.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">featurePlot</span>(Vehicle[,-<span class="dv">19</span>], Vehicle[,<span class="dv">19</span>], <span class="dt">plot =</span> <span class="st">&quot;box&quot;</span>)</code></pre></div>
+<pre class="r"><code>featurePlot(Vehicle[,-19], Vehicle[,19], plot = &quot;box&quot;)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-17-1.png" /><!-- --></p>
 </div>
 <div id="sampling-the-data" class="section level3">
 <h3><span class="header-section-number">3.5.3</span> Sampling the data</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">100</span>)
+<pre class="r"><code>set.seed(100)
 
-train_rows =<span class="st"> </span><span class="kw">createDataPartition</span>(Vehicle$Class, <span class="dt">p =</span> <span class="fl">0.7</span>, <span class="dt">list =</span> F)
-train =<span class="st"> </span>Vehicle[train_rows, ]
-test =<span class="st"> </span>Vehicle[-train_rows, ]</code></pre></div>
+train_rows = createDataPartition(Vehicle$Class, p = 0.7, list = F)
+train = Vehicle[train_rows, ]
+test = Vehicle[-train_rows, ]</code></pre>
 </div>
 <div id="train-the-model-with-naive-bayes" class="section level3">
 <h3><span class="header-section-number">3.5.4</span> Train the model with Naive Bayes</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(klaR)
+<pre class="r"><code>library(klaR)
 
-nb_mod =<span class="st"> </span><span class="kw">NaiveBayes</span>(Class ~<span class="st"> </span>., <span class="dt">data =</span> train)
-pred =<span class="st"> </span><span class="kw">predict</span>(nb_mod, test)</code></pre></div>
+nb_mod = NaiveBayes(Class ~ ., data = train)
+pred = predict(nb_mod, test)</code></pre>
 <pre><code>## Warning in FUN(X[[i]], ...): Numerical 0 probability for all classes with observation 1</code></pre>
 <pre><code>## Warning in FUN(X[[i]], ...): Numerical 0 probability for all classes with observation 2</code></pre>
 <pre><code>## Warning in FUN(X[[i]], ...): Numerical 0 probability for all classes with observation 3</code></pre>
@@ -907,8 +881,8 @@ pred =<span class="st"> </span><span class="kw">predict</span>(nb_mod, test)</co
 </div>
 <div id="metrics" class="section level3">
 <h3><span class="header-section-number">3.5.5</span> Metrics</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab =<span class="st"> </span><span class="kw">table</span>(pred$class, test$Class)
-caret::<span class="kw">confusionMatrix</span>(tab)</code></pre></div>
+<pre class="r"><code>tab = table(pred$class, test$Class)
+caret::confusionMatrix(tab)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##       
@@ -943,8 +917,9 @@ caret::<span class="kw">confusionMatrix</span>(tab)</code></pre></div>
 <div id="plot-naive-bayes" class="section level3">
 <h3><span class="header-section-number">3.5.6</span> Plot naive bayes</h3>
 <p>The following plots show the distribution of the different classes for the different variables. The more separate the distribution lines are, the more useful the variable is.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(nb_mod)</code></pre></div>
+<pre class="r"><code>plot(nb_mod)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-21-1.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-2.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-3.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-4.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-5.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-6.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-7.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-8.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-9.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-10.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-11.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-12.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-13.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-14.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-15.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-16.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-17.png" /><!-- --><img src="index_files/figure-html/unnamed-chunk-21-18.png" /><!-- --></p>
+<p><br></p>
 </div>
 </div>
 </div>
@@ -968,8 +943,8 @@ caret::<span class="kw">confusionMatrix</span>(tab)</code></pre></div>
 <h2><span class="header-section-number">4.2</span> Distance matrix</h2>
 <p>Distances can be calculated with several measures. Some of them are shown below. Regardless of which one you choose, we need to calculate a matrix of distances which represents, for each record, the distance to all other records.</p>
 <p><img src="images/17.PNG" width="1222" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;iris&quot;</span>)
-<span class="kw">head</span>(iris)</code></pre></div>
+<pre class="r"><code>data(&quot;iris&quot;)
+head(iris)</code></pre>
 <pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 ## 1          5.1         3.5          1.4         0.2  setosa
 ## 2          4.9         3.0          1.4         0.2  setosa
@@ -979,12 +954,12 @@ caret::<span class="kw">confusionMatrix</span>(tab)</code></pre></div>
 ## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
 <div id="calculating-in-r" class="section level3">
 <h3><span class="header-section-number">4.2.1</span> Calculating in R</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Euclidean Distance matrix - the first 10 rows using the values of the first 4 columns</span>
-<span class="kw">data</span>(iris)
-<span class="kw">class</span>(iris)</code></pre></div>
+<pre class="r"><code># Euclidean Distance matrix - the first 10 rows using the values of the first 4 columns
+data(iris)
+class(iris)</code></pre>
 <pre><code>## [1] &quot;data.frame&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d1 =<span class="st"> </span><span class="kw">dist</span>(iris[<span class="dv">1</span>:<span class="dv">10</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">4</span>)])
-d1</code></pre></div>
+<pre class="r"><code>d1 = dist(iris[1:10,c(1:4)])
+d1</code></pre>
 <pre><code>##            1         2         3         4         5         6         7         8         9
 ## 2  0.5385165                                                                                
 ## 3  0.5099020 0.3000000                                                                      
@@ -995,12 +970,12 @@ d1</code></pre></div>
 ## 8  0.1732051 0.4242641 0.4123106 0.5000000 0.2236068 0.7000000 0.4242641                    
 ## 9  0.9219544 0.5099020 0.4358899 0.3000000 0.9219544 1.4594520 0.5477226 0.7874008          
 ## 10 0.4690416 0.1732051 0.3162278 0.3162278 0.5291503 1.0099505 0.4795832 0.3316625 0.5567764</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># As an example of how this is calculated</span>
-iris[<span class="dv">1</span>:<span class="dv">2</span>,]</code></pre></div>
+<pre class="r"><code># As an example of how this is calculated
+iris[1:2,]</code></pre>
 <pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 ## 1          5.1         3.5          1.4         0.2  setosa
 ## 2          4.9         3.0          1.4         0.2  setosa</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sqrt</span>(((<span class="fl">5.1-4.9</span>)^<span class="dv">2</span> +<span class="st"> </span>(<span class="fl">3.5-3.0</span>)^<span class="dv">2</span> +<span class="st"> </span>(<span class="fl">1.4-1.4</span>)^<span class="dv">2</span> +<span class="st"> </span>(<span class="fl">0.2-0.2</span>)^<span class="dv">2</span>))</code></pre></div>
+<pre class="r"><code>sqrt(((5.1-4.9)^2 + (3.5-3.0)^2 + (1.4-1.4)^2 + (0.2-0.2)^2))</code></pre>
 <pre><code>## [1] 0.5385165</code></pre>
 <p>We can answer this question with the distance matrix. As an example, for the first record we see that record 5 and 8 are quite close compared to the other records.</p>
 <p>So, taking it back to one of the steps in kNN:</p>
@@ -1013,11 +988,11 @@ iris[<span class="dv">1</span>:<span class="dv">2</span>,]</code></pre></div>
 <div id="normalization" class="section level2">
 <h2><span class="header-section-number">4.3</span> Normalization</h2>
 <p>It is important to normalize before taking any further action. This is because, if we have variables that have different orders of magnitude, they will skew the end classification. We need to bring them to an equivalent order. There are many ways to normalise record, but let’s add a simple way of doing so, which is to chane the range so that all features are between 0 and 1.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">normalize =<span class="st"> </span>function(x){<span class="kw">return</span>((x-<span class="kw">min</span>(x))/(<span class="kw">max</span>(x)-<span class="kw">min</span>(x)))}
+<pre class="r"><code>normalize = function(x){return((x-min(x))/(max(x)-min(x)))}
 
-normalized_iris =<span class="st"> </span><span class="kw">lapply</span>(iris[,-<span class="dv">5</span>], normalize)
-iris_n =<span class="st"> </span><span class="kw">data.frame</span>(normalized_iris, <span class="dt">Species =</span> iris[,<span class="dv">5</span>])
-<span class="kw">summary</span>(iris_n)</code></pre></div>
+normalized_iris = lapply(iris[,-5], normalize)
+iris_n = data.frame(normalized_iris, Species = iris[,5])
+summary(iris_n)</code></pre>
 <pre><code>##   Sepal.Length     Sepal.Width      Petal.Length     Petal.Width            Species  
 ##  Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.00000   setosa    :50  
 ##  1st Qu.:0.2222   1st Qu.:0.3333   1st Qu.:0.1017   1st Qu.:0.08333   versicolor:50  
@@ -1028,8 +1003,8 @@ iris_n =<span class="st"> </span><span class="kw">data.frame</span>(normalized_i
 <div id="recalculating-distances-after-normalization" class="section level3">
 <h3><span class="header-section-number">4.3.1</span> Recalculating distances after normalization</h3>
 <p>As you can see, the neighbours have now changed. This is why normalization is so important! We don’t want variables that have a higher magnitude have a higher impact just because of so. We want them to be important regardless of their order of magnitude.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d2 =<span class="st"> </span><span class="kw">dist</span>(iris_n[<span class="dv">1</span>:<span class="dv">10</span>,<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">4</span>)])
-d2</code></pre></div>
+<pre class="r"><code>d2 = dist(iris_n[1:10,c(1:4)])
+d2</code></pre>
 <pre><code>##             1          2          3          4          5          6          7          8          9
 ## 2  0.21561354                                                                                        
 ## 3  0.16810102 0.10157824                                                                             
@@ -1044,19 +1019,19 @@ d2</code></pre></div>
 </div>
 <div id="knn-for-classification" class="section level2">
 <h2><span class="header-section-number">4.4</span> kNN for classification</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Split the data</span>
-<span class="kw">set.seed</span>(<span class="dv">100</span>)
-train_rows =<span class="st"> </span><span class="kw">createDataPartition</span>(iris_n$Species, <span class="dt">p =</span> <span class="fl">0.7</span>, <span class="dt">list =</span> F)
-train =<span class="st"> </span>iris_n[train_rows, ]
-test =<span class="st"> </span>iris_n[-train_rows, ]
+<pre class="r"><code># Split the data
+set.seed(100)
+train_rows = createDataPartition(iris_n$Species, p = 0.7, list = F)
+train = iris_n[train_rows, ]
+test = iris_n[-train_rows, ]
 
-<span class="co"># Build the model</span>
-fit =<span class="st"> </span>caret::<span class="kw">knn3</span>(train[, -<span class="dv">5</span>], train[, <span class="dv">5</span>], <span class="dt">k =</span> <span class="dv">5</span>)
+# Build the model
+fit = caret::knn3(train[, -5], train[, 5], k = 5)
 
-<span class="co"># Make predictions</span>
-predictions =<span class="st"> </span><span class="kw">predict</span>(fit, test[, -<span class="dv">5</span>], <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
-tab =<span class="st"> </span><span class="kw">table</span>(predictions, test$Species)
-caret::<span class="kw">confusionMatrix</span>(tab)</code></pre></div>
+# Make predictions
+predictions = predict(fit, test[, -5], type = &quot;class&quot;)
+tab = table(predictions, test$Species)
+caret::confusionMatrix(tab)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##             
@@ -1089,9 +1064,9 @@ caret::<span class="kw">confusionMatrix</span>(tab)</code></pre></div>
 </div>
 <div id="knn-for-continuous-variables" class="section level2">
 <h2><span class="header-section-number">4.5</span> kNN for continuous variables</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get the data</span>
-<span class="kw">data</span>(Boston, <span class="dt">package =</span> <span class="st">&quot;MASS&quot;</span>)
-<span class="kw">head</span>(Boston)</code></pre></div>
+<pre class="r"><code># Get the data
+data(Boston, package = &quot;MASS&quot;)
+head(Boston)</code></pre>
 <pre><code>##      crim zn indus chas   nox    rm  age    dis rad tax ptratio  black lstat medv
 ## 1 0.00632 18  2.31    0 0.538 6.575 65.2 4.0900   1 296    15.3 396.90  4.98 24.0
 ## 2 0.02731  0  7.07    0 0.469 6.421 78.9 4.9671   2 242    17.8 396.90  9.14 21.6
@@ -1099,21 +1074,22 @@ caret::<span class="kw">confusionMatrix</span>(tab)</code></pre></div>
 ## 4 0.03237  0  2.18    0 0.458 6.998 45.8 6.0622   3 222    18.7 394.63  2.94 33.4
 ## 5 0.06905  0  2.18    0 0.458 7.147 54.2 6.0622   3 222    18.7 396.90  5.33 36.2
 ## 6 0.02985  0  2.18    0 0.458 6.430 58.7 6.0622   3 222    18.7 394.12  5.21 28.7</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Split the data</span>
-<span class="kw">set.seed</span>(<span class="dv">100</span>)
-train_rows =<span class="st"> </span><span class="kw">createDataPartition</span>(Boston$medv, <span class="dt">p =</span> <span class="fl">0.7</span>, <span class="dt">list =</span> F)
-train =<span class="st"> </span>Boston[train_rows, ]
-test =<span class="st"> </span>Boston[-train_rows, ]
+<pre class="r"><code># Split the data
+set.seed(100)
+train_rows = createDataPartition(Boston$medv, p = 0.7, list = F)
+train = Boston[train_rows, ]
+test = Boston[-train_rows, ]
 
-<span class="co"># Build the model</span>
-fit =<span class="st"> </span>caret::<span class="kw">knnreg</span>(train[, -<span class="dv">14</span>], train[, <span class="dv">14</span>], <span class="dt">k =</span> <span class="dv">5</span>)
+# Build the model
+fit = caret::knnreg(train[, -14], train[, 14], k = 5)
 
-<span class="co"># Make predictions</span>
-predictions =<span class="st"> </span><span class="kw">predict</span>(fit, test[, -<span class="dv">5</span>], <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
-DMwR::<span class="kw">regr.eval</span>(test$medv, predictions)</code></pre></div>
+# Make predictions
+predictions = predict(fit, test[, -5], type = &quot;class&quot;)
+DMwR::regr.eval(test$medv, predictions)</code></pre>
 <pre><code>##         mae         mse        rmse        mape 
 ##   7.5913556 108.1100294  10.3975973   0.3187053</code></pre>
 <p><img src="images/18.PNG" width="1162" /></p>
+<p><br></p>
 </div>
 </div>
 <div id="building-tree-based-models-using-rpart-ctree-and-c5.0" class="section level1">
@@ -1131,18 +1107,18 @@ DMwR::<span class="kw">regr.eval</span>(test$medv, predictions)</code></pre></di
 </ul>
 <div id="how-do-decision-trees-work---ctree-example" class="section level2">
 <h2><span class="header-section-number">5.1</span> How do decision trees work? - cTree example</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(caret)
+<pre class="r"><code>library(caret)
 
-<span class="co"># Splitting data</span>
-train_rows =<span class="st"> </span><span class="kw">createDataPartition</span>(iris$Species, <span class="dt">p =</span> <span class="fl">0.7</span>, <span class="dt">list =</span> F)
-trainData =<span class="st"> </span>iris[train_rows, ]
-testData =<span class="st"> </span>iris[-train_rows, ]
+# Splitting data
+train_rows = createDataPartition(iris$Species, p = 0.7, list = F)
+trainData = iris[train_rows, ]
+testData = iris[-train_rows, ]
 
-<span class="co"># partykit library for cTree algorithm</span>
-<span class="kw">library</span>(partykit)
+# partykit library for cTree algorithm
+library(partykit)
 
-ctMod =<span class="st"> </span><span class="kw">ctree</span>(Species ~<span class="st"> </span>Sepal.Length +<span class="st"> </span>Sepal.Width +<span class="st"> </span>Petal.Length +<span class="st"> </span>Petal.Width, <span class="dt">data =</span> trainData)
-<span class="kw">print</span>(ctMod)</code></pre></div>
+ctMod = ctree(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, data = trainData)
+print(ctMod)</code></pre>
 <pre><code>## 
 ##   Conditional inference tree with 4 terminal nodes
 ## 
@@ -1160,7 +1136,7 @@ ctMod =<span class="st"> </span><span class="kw">ctree</span>(Species ~<span cla
 ##       6)*  weights = 8 
 ##   3) Petal.Width &gt; 1.7
 ##     7)*  weights = 33</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(ctMod)</code></pre></div>
+<pre class="r"><code>plot(ctMod)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-31-1.png" /><!-- --></p>
 <p>This is a classification tree.</p>
 <ul>
@@ -1184,11 +1160,11 @@ ctMod =<span class="st"> </span><span class="kw">ctree</span>(Species ~<span cla
 <div id="ctree-algorithm---controlling-parameters" class="section level2">
 <h2><span class="header-section-number">5.2</span> cTree algorithm - controlling parameters</h2>
 <p>We have seen how to implement a cTree algorithm. The cTree algorithms has many parameters feeding into it and we can play around with those parameters using the <strong>ctree_control</strong> function. Let’s check this creating another tree.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ctMod_2 =<span class="st"> </span><span class="kw">ctree</span>(Species ~<span class="st"> </span>Sepal.Length +<span class="st"> </span>Sepal.Width +<span class="st"> </span>Petal.Length +<span class="st"> </span>Petal.Width
-                , <span class="dt">control =</span> <span class="kw">ctree_control</span>(<span class="dt">maxdepth =</span> <span class="dv">2</span>)
-                , <span class="dt">data =</span> trainData)
+<pre class="r"><code>ctMod_2 = ctree(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
+                , control = ctree_control(maxdepth = 2)
+                , data = trainData)
 
-<span class="kw">print</span>(ctMod_2)</code></pre></div>
+print(ctMod_2)</code></pre>
 <pre><code>## 
 ##   Conditional inference tree with 3 terminal nodes
 ## 
@@ -1203,22 +1179,22 @@ ctMod =<span class="st"> </span><span class="kw">ctree</span>(Species ~<span cla
 ##     4)*  weights = 37 
 ##   3) Petal.Width &gt; 1.7
 ##     5)*  weights = 33</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(ctMod_2)</code></pre></div>
+<pre class="r"><code>plot(ctMod_2)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-33-1.png" /><!-- --></p>
 </div>
 <div id="predict-using-the-previous-2-models" class="section level2">
 <h2><span class="header-section-number">5.3</span> Predict using the previous 2 models</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Predict 1</span>
-out1 =<span class="st"> </span><span class="kw">predict</span>(ctMod, testData)
+<pre class="r"><code># Predict 1
+out1 = predict(ctMod, testData)
 
-<span class="co"># Predict 2</span>
-out2 =<span class="st"> </span><span class="kw">predict</span>(ctMod_2, testData)
+# Predict 2
+out2 = predict(ctMod_2, testData)
 
-<span class="co"># How many miss matched predict 1</span>
-<span class="kw">sum</span>(testData[, <span class="dv">5</span>] !=<span class="st"> </span>out1)</code></pre></div>
+# How many miss matched predict 1
+sum(testData[, 5] != out1)</code></pre>
 <pre><code>## [1] 2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># How many miss matched predict 1</span>
-<span class="kw">sum</span>(testData[, <span class="dv">5</span>] !=<span class="st"> </span>out2)</code></pre></div>
+<pre class="r"><code># How many miss matched predict 1
+sum(testData[, 5] != out2)</code></pre>
 <pre><code>## [1] 2</code></pre>
 </div>
 <div id="rpart" class="section level2">
@@ -1229,15 +1205,15 @@ out2 =<span class="st"> </span><span class="kw">predict</span>(ctMod_2, testData
 </div>
 <div id="implement-in-r" class="section level3">
 <h3><span class="header-section-number">5.4.2</span> Implement in R</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rpart)
+<pre class="r"><code>library(rpart)
 
-<span class="co"># Model</span>
-rpartMod =<span class="st"> </span><span class="kw">rpart</span>(Species ~<span class="st"> </span>.
-                 , <span class="dt">data =</span> trainData
-                 , <span class="dt">control =</span> <span class="kw">rpart.control</span>(<span class="dt">minsplit =</span> <span class="dv">5</span>
-                                           , <span class="dt">cp =</span> <span class="dv">0</span>
-                                           , <span class="dt">maxdepth =</span> <span class="dv">4</span>))
-rpartMod</code></pre></div>
+# Model
+rpartMod = rpart(Species ~ .
+                 , data = trainData
+                 , control = rpart.control(minsplit = 5
+                                           , cp = 0
+                                           , maxdepth = 4))
+rpartMod</code></pre>
 <pre><code>## n= 105 
 ## 
 ## node), split, n, loss, yval, (yprob)
@@ -1250,25 +1226,25 @@ rpartMod</code></pre></div>
 ##       12) Petal.Length&lt; 5.05 35  1 versicolor (0.00000000 0.97142857 0.02857143) *
 ##       13) Petal.Length&gt;=5.05 2  0 virginica (0.00000000 0.00000000 1.00000000) *
 ##      7) Petal.Width&gt;=1.75 33  1 virginica (0.00000000 0.03030303 0.96969697) *</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Prediction</span>
-pred =<span class="st"> </span><span class="kw">predict</span>(rpartMod, testData, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
-<span class="kw">sum</span>(testData[, <span class="dv">5</span>] !=<span class="st"> </span>pred)</code></pre></div>
+<pre class="r"><code># Prediction
+pred = predict(rpartMod, testData, type = &quot;class&quot;)
+sum(testData[, 5] != pred)</code></pre>
 <pre><code>## [1] 2</code></pre>
 </div>
 <div id="fancy-rpart-tree-plotting" class="section level3">
 <h3><span class="header-section-number">5.4.3</span> Fancy rpart tree plotting</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rattle)
+<pre class="r"><code>library(rattle)
 
-<span class="co"># Option 1 - fancyRpartPlot</span>
-<span class="kw">fancyRpartPlot</span>(rpartMod)</code></pre></div>
+# Option 1 - fancyRpartPlot
+fancyRpartPlot(rpartMod)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-37-1.png" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Option 2 - convert to a partykit object and plot as a cTree plot</span>
-iris_party =<span class="st"> </span><span class="kw">as.party.rpart</span>(rpartMod)
-<span class="kw">plot</span>(iris_party)</code></pre></div>
+<pre class="r"><code># Option 2 - convert to a partykit object and plot as a cTree plot
+iris_party = as.party.rpart(rpartMod)
+plot(iris_party)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-37-2.png" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Option 3 - manually</span>
-<span class="kw">library</span>(rpart.plot)
-<span class="kw">prp</span>(rpartMod, <span class="dt">extra =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="dv">2</span>)</code></pre></div>
+<pre class="r"><code># Option 3 - manually
+library(rpart.plot)
+prp(rpartMod, extra = 1, type = 2)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-37-3.png" /><!-- --></p>
 </div>
 </div>
@@ -1277,18 +1253,18 @@ iris_party =<span class="st"> </span><span class="kw">as.party.rpart</span>(rpar
 <p>The C5.0 algorithm incorporates the boosting algorithm.</p>
 <div id="tree" class="section level3">
 <h3><span class="header-section-number">5.5.1</span> Tree</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(C50)
+<pre class="r"><code>library(C50)
 
-c5Mod =<span class="st"> </span><span class="kw">C5.0</span>(Species ~<span class="st"> </span>., <span class="dt">data =</span> trainData
-             , <span class="dt">control =</span> <span class="kw">C5.0Control</span>(<span class="dt">winnow =</span> F))
+c5Mod = C5.0(Species ~ ., data = trainData
+             , control = C5.0Control(winnow = F))
 
-<span class="kw">summary</span>(c5Mod)</code></pre></div>
+summary(c5Mod)</code></pre>
 <pre><code>## 
 ## Call:
 ## C5.0.formula(formula = Species ~ ., data = trainData, control = C5.0Control(winnow = F))
 ## 
 ## 
-## C5.0 [Release 2.07 GPL Edition]      Thu Dec 21 11:46:58 2017
+## C5.0 [Release 2.07 GPL Edition]      Mon Jan 15 08:58:12 2018
 ## -------------------------------
 ## 
 ## Class specified by attribute `outcome&#39;
@@ -1328,9 +1304,9 @@ c5Mod =<span class="st"> </span><span class="kw">C5.0</span>(Species ~<span clas
 ## 
 ## 
 ## Time: 0.0 secs</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(c5Mod)</code></pre></div>
+<pre class="r"><code>plot(c5Mod)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-38-1.png" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">C5imp</span>(c5Mod)</code></pre></div>
+<pre class="r"><code>C5imp(c5Mod)</code></pre>
 <pre><code>##              Overall
 ## Petal.Length  100.00
 ## Petal.Width    66.67
@@ -1339,19 +1315,19 @@ c5Mod =<span class="st"> </span><span class="kw">C5.0</span>(Species ~<span clas
 </div>
 <div id="rules" class="section level3">
 <h3><span class="header-section-number">5.5.2</span> Rules</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(C50)
+<pre class="r"><code>library(C50)
 
-c5Mod =<span class="st"> </span><span class="kw">C5.0</span>(Species ~<span class="st"> </span>., <span class="dt">data =</span> trainData
-             , <span class="dt">control =</span> <span class="kw">C5.0Control</span>(<span class="dt">winnow =</span> F)
-             , <span class="dt">rules =</span> T)
+c5Mod = C5.0(Species ~ ., data = trainData
+             , control = C5.0Control(winnow = F)
+             , rules = T)
 
-<span class="kw">summary</span>(c5Mod)</code></pre></div>
+summary(c5Mod)</code></pre>
 <pre><code>## 
 ## Call:
 ## C5.0.formula(formula = Species ~ ., data = trainData, control = C5.0Control(winnow = F), rules = T)
 ## 
 ## 
-## C5.0 [Release 2.07 GPL Edition]      Thu Dec 21 11:46:59 2017
+## C5.0 [Release 2.07 GPL Edition]      Mon Jan 15 08:58:12 2018
 ## -------------------------------
 ## 
 ## Class specified by attribute `outcome&#39;
@@ -1404,6 +1380,7 @@ c5Mod =<span class="st"> </span><span class="kw">C5.0</span>(Species ~<span clas
 ## 
 ## 
 ## Time: 0.0 secs</code></pre>
+<p><br></p>
 </div>
 </div>
 </div>
@@ -1412,20 +1389,20 @@ c5Mod =<span class="st"> </span><span class="kw">C5.0</span>(Species ~<span clas
 <p>Caret will enable you to control, evalute and train the model all within the same package.</p>
 <div id="preprocessing" class="section level2">
 <h2><span class="header-section-number">6.1</span> Preprocessing</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(caret)
+<pre class="r"><code>library(caret)
 
-<span class="co"># Normalze all X&#39;s to range from 0 to 1</span>
-preprocessParams =<span class="st"> </span><span class="kw">preProcess</span>(iris[,<span class="dv">1</span>:<span class="dv">4</span>], <span class="dt">method =</span> <span class="kw">c</span>(<span class="st">&quot;range&quot;</span>))
-preprocessParams</code></pre></div>
+# Normalze all X&#39;s to range from 0 to 1
+preprocessParams = preProcess(iris[,1:4], method = c(&quot;range&quot;))
+preprocessParams</code></pre>
 <pre><code>## Created from 150 samples and 4 variables
 ## 
 ## Pre-processing:
 ##   - ignored (0)
 ##   - re-scaling to [0, 1] (4)</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Apply the transform</span>
-normalized =<span class="st"> </span><span class="kw">predict</span>(preprocessParams, iris[,<span class="dv">1</span>:<span class="dv">4</span>])
-iris_n =<span class="st"> </span><span class="kw">cbind</span>(normalized, <span class="dt">Species =</span> iris$Species)
-<span class="kw">summary</span>(iris_n)</code></pre></div>
+<pre class="r"><code># Apply the transform
+normalized = predict(preprocessParams, iris[,1:4])
+iris_n = cbind(normalized, Species = iris$Species)
+summary(iris_n)</code></pre>
 <pre><code>##   Sepal.Length     Sepal.Width      Petal.Length     Petal.Width            Species  
 ##  Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.00000   setosa    :50  
 ##  1st Qu.:0.2222   1st Qu.:0.3333   1st Qu.:0.1017   1st Qu.:0.08333   versicolor:50  
@@ -1440,12 +1417,12 @@ iris_n =<span class="st"> </span><span class="kw">cbind</span>(normalized, <span
 <h2><span class="header-section-number">6.2</span> Training and predicting with knn using caret package</h2>
 <p>The most powerful feature in the caret package is the train function. If you go to the following web page, you will see the full list of predictive models that the caret package can handle.</p>
 <p>**<a href="http://topepo.github.io/caret/available-models.html**" class="uri">http://topepo.github.io/caret/available-models.html**</a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">100</span>)
-train_rows =<span class="st"> </span><span class="kw">createDataPartition</span>(iris_n$Species, <span class="dt">p =</span> <span class="fl">0.7</span>, <span class="dt">list =</span> F)
-trainData =<span class="st"> </span>iris_n[train_rows, ]
-testData =<span class="st"> </span>iris_n[-train_rows, ]
-fit =<span class="st"> </span><span class="kw">train</span>(Species ~<span class="st"> </span>., <span class="dt">data =</span> trainData, <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;range&quot;</span>), <span class="dt">method =</span> <span class="st">&quot;knn&quot;</span>)
-fit</code></pre></div>
+<pre class="r"><code>set.seed(100)
+train_rows = createDataPartition(iris_n$Species, p = 0.7, list = F)
+trainData = iris_n[train_rows, ]
+testData = iris_n[-train_rows, ]
+fit = train(Species ~ ., data = trainData, preProcess = c(&quot;range&quot;), method = &quot;knn&quot;)
+fit</code></pre>
 <pre><code>## k-Nearest Neighbors 
 ## 
 ## 105 samples
@@ -1470,22 +1447,22 @@ fit</code></pre></div>
 <li>Resampling means that the algorithm was run on the train data 25 times by resampling.</li>
 <li>Then for different values of the k parameter, we see the accuracy and kappa metrics.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># predict using the final model in the fit object</span>
-pred =<span class="st"> </span><span class="kw">predict</span>(fit$finalModel, <span class="dt">newdata =</span> testData[,<span class="dv">1</span>:<span class="dv">4</span>], <span class="dt">type=</span><span class="st">&quot;class&quot;</span>)</code></pre></div>
+<pre class="r"><code># predict using the final model in the fit object
+pred = predict(fit$finalModel, newdata = testData[,1:4], type=&quot;class&quot;)</code></pre>
 </div>
 <div id="controlling-training-method-parameters-caret-package" class="section level2">
 <h2><span class="header-section-number">6.3</span> Controlling training method parameters caret package</h2>
 <p>We can do this by using the trainControl function that can be used as an input to the train function.</p>
 <div id="creating-the-traincontrol-object-and-passing-to-a-model" class="section level3">
 <h3><span class="header-section-number">6.3.1</span> Creating the trainControl object and passing to a model</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tc =<span class="st"> </span><span class="kw">trainControl</span>(<span class="dt">method =</span> <span class="st">&quot;repeatedcv&quot;</span>, <span class="dt">number =</span> <span class="dv">5</span>, <span class="dt">repeats =</span> <span class="dv">3</span>)
+<pre class="r"><code>tc = trainControl(method = &quot;repeatedcv&quot;, number = 5, repeats = 3)
 
-fit_repeatedcv =<span class="st"> </span><span class="kw">train</span>(Species ~<span class="st"> </span>., <span class="dt">data =</span> trainData, 
-                       <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;range&quot;</span>)
-                       , <span class="dt">method =</span> <span class="st">&quot;knn&quot;</span>
-                       , <span class="dt">trControl =</span> tc)
+fit_repeatedcv = train(Species ~ ., data = trainData, 
+                       preProcess = c(&quot;range&quot;)
+                       , method = &quot;knn&quot;
+                       , trControl = tc)
 
-fit_repeatedcv</code></pre></div>
+fit_repeatedcv</code></pre>
 <pre><code>## k-Nearest Neighbors 
 ## 
 ## 105 samples
@@ -1507,14 +1484,14 @@ fit_repeatedcv</code></pre></div>
 </div>
 <div id="changing-the-evaluation-metric" class="section level3">
 <h3><span class="header-section-number">6.3.2</span> Changing the evaluation metric</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># We can also change the evaluation metric that the method will use to check the best model</span>
-fit_repeatedcv_kappa =<span class="st"> </span><span class="kw">train</span>(Species ~<span class="st"> </span>., <span class="dt">data =</span> trainData, 
-                       <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;range&quot;</span>)
-                       , <span class="dt">method =</span> <span class="st">&quot;knn&quot;</span>
-                       , <span class="dt">trControl =</span> tc
-                       , <span class="dt">metric=</span> <span class="st">&quot;Kappa&quot;</span>)
+<pre class="r"><code># We can also change the evaluation metric that the method will use to check the best model
+fit_repeatedcv_kappa = train(Species ~ ., data = trainData, 
+                       preProcess = c(&quot;range&quot;)
+                       , method = &quot;knn&quot;
+                       , trControl = tc
+                       , metric= &quot;Kappa&quot;)
 
-fit_repeatedcv_kappa</code></pre></div>
+fit_repeatedcv_kappa</code></pre>
 <pre><code>## k-Nearest Neighbors 
 ## 
 ## 105 samples
@@ -1536,19 +1513,19 @@ fit_repeatedcv_kappa</code></pre></div>
 </div>
 <div id="adding-more-metric-information-to-the-output" class="section level3">
 <h3><span class="header-section-number">6.3.3</span> Adding more metric information to the output</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Add to the control parameters a summary function</span>
-tc =<span class="st"> </span><span class="kw">trainControl</span>(<span class="dt">method =</span> <span class="st">&quot;repeatedcv&quot;</span>, <span class="dt">number =</span> <span class="dv">5</span>, <span class="dt">repeats =</span> <span class="dv">3</span>
-                  , <span class="dt">summaryFunction =</span> multiClassSummary)
+<pre class="r"><code># Add to the control parameters a summary function
+tc = trainControl(method = &quot;repeatedcv&quot;, number = 5, repeats = 3
+                  , summaryFunction = multiClassSummary)
 
 
-<span class="co"># We can also change the evaluation metric that the method will use to check the best model</span>
-fit_repeatedcv_kappa =<span class="st"> </span><span class="kw">train</span>(Species ~<span class="st"> </span>., <span class="dt">data =</span> trainData, 
-                       <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;range&quot;</span>)
-                       , <span class="dt">method =</span> <span class="st">&quot;knn&quot;</span>
-                       , <span class="dt">trControl =</span> tc
-                       , <span class="dt">metric=</span> <span class="st">&quot;Kappa&quot;</span>)
+# We can also change the evaluation metric that the method will use to check the best model
+fit_repeatedcv_kappa = train(Species ~ ., data = trainData, 
+                       preProcess = c(&quot;range&quot;)
+                       , method = &quot;knn&quot;
+                       , trControl = tc
+                       , metric= &quot;Kappa&quot;)
 
-fit_repeatedcv_kappa</code></pre></div>
+fit_repeatedcv_kappa</code></pre>
 <pre><code>## k-Nearest Neighbors 
 ## 
 ## 105 samples
@@ -1572,25 +1549,25 @@ fit_repeatedcv_kappa</code></pre></div>
 <div id="controlling-the-tuning-of-the-algorithms-parameters" class="section level2">
 <h2><span class="header-section-number">6.4</span> Controlling the tuning of the algorithms parameters</h2>
 <p>As you know, there are multiple training algorithms we can use to train a model. Sometimes, some of these models have many possible input parameters that we can change, so a very helpful function is the modelLookup, that will output the list of parameters you can use (or alternatively, you can use the webpage above).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># As you can see, knn as only 1 input parameter to change</span>
-<span class="kw">modelLookup</span>(<span class="st">&quot;knn&quot;</span>)</code></pre></div>
+<pre class="r"><code># As you can see, knn as only 1 input parameter to change
+modelLookup(&quot;knn&quot;)</code></pre>
 <pre><code>##   model parameter      label forReg forClass probModel
 ## 1   knn         k #Neighbors   TRUE     TRUE      TRUE</code></pre>
 <div id="defining-grid-search" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Defining grid search</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create the grid for knn</span>
-grid =<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">k =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">17</span>,<span class="dv">19</span>,<span class="dv">23</span>,<span class="dv">25</span>))
+<pre class="r"><code># Create the grid for knn
+grid = expand.grid(k = c(5,7,11,13,17,19,23,25))
 
-fit_repeatedcv_kappa_tunegrid =<span class="st"> </span><span class="kw">train</span>(Species ~<span class="st"> </span>.,
-                                      <span class="dt">data =</span> trainData
-                                      , <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;range&quot;</span>)
-                                      , <span class="dt">method =</span> <span class="st">&quot;knn&quot;</span>
-                                      , <span class="dt">trControl =</span> tc
-                                      , <span class="dt">metric =</span> <span class="st">&quot;Kappa&quot;</span>
-                                      , <span class="dt">tuneGrid =</span> grid)
+fit_repeatedcv_kappa_tunegrid = train(Species ~ .,
+                                      data = trainData
+                                      , preProcess = c(&quot;range&quot;)
+                                      , method = &quot;knn&quot;
+                                      , trControl = tc
+                                      , metric = &quot;Kappa&quot;
+                                      , tuneGrid = grid)
 
 
-fit_repeatedcv_kappa_tunegrid</code></pre></div>
+fit_repeatedcv_kappa_tunegrid</code></pre>
 <pre><code>## k-Nearest Neighbors 
 ## 
 ## 105 samples
@@ -1614,7 +1591,7 @@ fit_repeatedcv_kappa_tunegrid</code></pre></div>
 ## 
 ## Kappa was used to select the optimal model using  the largest value.
 ## The final value used for the model was k = 7.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit_repeatedcv_kappa_tunegrid$finalModel</code></pre></div>
+<pre class="r"><code>fit_repeatedcv_kappa_tunegrid$finalModel</code></pre>
 <pre><code>## 7-nearest neighbor classification model
 ## Training set class distribution:
 ## 
@@ -1624,14 +1601,14 @@ fit_repeatedcv_kappa_tunegrid</code></pre></div>
 </div>
 <div id="c5-algorithm-with-caret" class="section level2">
 <h2><span class="header-section-number">6.5</span> C5 algorithm with caret</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create the grid for knn</span>
-c5_fit_repeatedcv_kappa =<span class="st"> </span><span class="kw">train</span>(Species ~<span class="st"> </span>.
-                                , <span class="dt">data =</span> trainData
-                                , <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;range&quot;</span>)
-                                , <span class="dt">method =</span> <span class="st">&quot;C5.0&quot;</span>
-                                , <span class="dt">trControl =</span> tc
-                                , <span class="dt">metric =</span> <span class="st">&quot;Kappa&quot;</span>
-                                , <span class="dt">tuneLength =</span> <span class="dv">10</span>)</code></pre></div>
+<pre class="r"><code># Create the grid for knn
+c5_fit_repeatedcv_kappa = train(Species ~ .
+                                , data = trainData
+                                , preProcess = c(&quot;range&quot;)
+                                , method = &quot;C5.0&quot;
+                                , trControl = tc
+                                , metric = &quot;Kappa&quot;
+                                , tuneLength = 10)</code></pre>
 <pre><code>## Warning: &#39;trials&#39; should be &lt;= 31 for this object. Predictions generated using 31 trials
 
 ## Warning: &#39;trials&#39; should be &lt;= 31 for this object. Predictions generated using 31 trials
@@ -2441,9 +2418,9 @@ c5_fit_repeatedcv_kappa =<span class="st"> </span><span class="kw">train</span>(
 ## Warning: &#39;trials&#39; should be &lt;= 5 for this object. Predictions generated using 5 trials
 
 ## Warning: &#39;trials&#39; should be &lt;= 5 for this object. Predictions generated using 5 trials</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">c5Fit =<span class="st"> </span>c5_fit_repeatedcv_kappa$finalModel
-out =<span class="st"> </span><span class="kw">predict</span>(c5Fit, testData, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
-caret::<span class="kw">confusionMatrix</span>(out, testData$Species)</code></pre></div>
+<pre class="r"><code>c5Fit = c5_fit_repeatedcv_kappa$finalModel
+out = predict(c5Fit, testData, type = &quot;class&quot;)
+caret::confusionMatrix(out, testData$Species)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##             Reference
@@ -2473,12 +2450,12 @@ caret::<span class="kw">confusionMatrix</span>(out, testData$Species)</code></pr
 ## Detection Rate              0.3111            0.2889           0.3333
 ## Detection Prevalence        0.3111            0.3111           0.3778
 ## Balanced Accuracy           0.9667            0.9167           0.9667</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Multiclass summary on test data</span>
-testResults =<span class="st"> </span><span class="kw">predict</span>(c5Fit, testData, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)
-testResults =<span class="st"> </span><span class="kw">data.frame</span>(testResults)
-testResults$obs =<span class="st"> </span>testData$Species
-testResults$pred =<span class="st"> </span><span class="kw">predict</span>(c5Fit, testData, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
-<span class="kw">multiClassSummary</span>(testResults, <span class="dt">lev =</span> <span class="kw">levels</span>(testData$Species))</code></pre></div>
+<pre class="r"><code># Multiclass summary on test data
+testResults = predict(c5Fit, testData, type = &quot;prob&quot;)
+testResults = data.frame(testResults)
+testResults$obs = testData$Species
+testResults$pred = predict(c5Fit, testData, type = &quot;class&quot;)
+multiClassSummary(testResults, lev = levels(testData$Species))</code></pre>
 <pre><code>##                logLoss                    AUC               Accuracy                  Kappa                Mean_F1       Mean_Sensitivity       Mean_Specificity    Mean_Pos_Pred_Value    Mean_Neg_Pred_Value    Mean_Detection_Rate 
 ##              2.3025851              0.9500000              0.9333333              0.9000000              0.9331897              0.9333333              0.9666667              0.9369748              0.9677419              0.3111111 
 ## Mean_Balanced_Accuracy 
@@ -2486,25 +2463,25 @@ testResults$pred =<span class="st"> </span><span class="kw">predict</span>(c5Fit
 </div>
 <div id="ctree-algorithm-with-caret" class="section level2">
 <h2><span class="header-section-number">6.6</span> cTree algorithm with caret</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(party)
+<pre class="r"><code>library(party)
 
-<span class="co"># Create the grid for knn</span>
-ctree_fit_repeatedcv_kappa =<span class="st"> </span><span class="kw">train</span>(Species ~<span class="st"> </span>.
-                                , <span class="dt">data =</span> trainData
-                                , <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;range&quot;</span>)
-                                , <span class="dt">method =</span> <span class="st">&quot;ctree&quot;</span>
-                                , <span class="dt">trControl =</span> tc
-                                , <span class="dt">metric =</span> <span class="st">&quot;Kappa&quot;</span>
-                                , <span class="dt">tuneLength =</span> <span class="dv">10</span>)</code></pre></div>
+# Create the grid for knn
+ctree_fit_repeatedcv_kappa = train(Species ~ .
+                                , data = trainData
+                                , preProcess = c(&quot;range&quot;)
+                                , method = &quot;ctree&quot;
+                                , trControl = tc
+                                , metric = &quot;Kappa&quot;
+                                , tuneLength = 10)</code></pre>
 </div>
 <div id="comparing-the-3-built-models-with-resample-function" class="section level2">
 <h2><span class="header-section-number">6.7</span> Comparing the 3 built models with Resample function</h2>
 <p>If you check the output of the resamples function, we can see for example that, for mean sensitivity, the ctree algorithm provided the best result.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">combo =<span class="st"> </span><span class="kw">resamples</span>(<span class="kw">list</span>(<span class="dt">KNN =</span> fit_repeatedcv_kappa
-                       , <span class="dt">C5 =</span> c5_fit_repeatedcv_kappa
-                       , <span class="dt">cTree =</span> ctree_fit_repeatedcv_kappa))
+<pre class="r"><code>combo = resamples(list(KNN = fit_repeatedcv_kappa
+                       , C5 = c5_fit_repeatedcv_kappa
+                       , cTree = ctree_fit_repeatedcv_kappa))
 
-combo</code></pre></div>
+combo</code></pre>
 <pre><code>## 
 ## Call:
 ## resamples.default(x = list(KNN = fit_repeatedcv_kappa, C5 = c5_fit_repeatedcv_kappa, cTree = ctree_fit_repeatedcv_kappa))
@@ -2513,7 +2490,7 @@ combo</code></pre></div>
 ## Number of resamples: 15 
 ## Performance metrics: Accuracy, Kappa, Mean_Balanced_Accuracy, Mean_Detection_Rate, Mean_F1, Mean_Neg_Pred_Value, Mean_Pos_Pred_Value, Mean_Sensitivity, Mean_Specificity 
 ## Time estimates for: everything, final model fit</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(combo)</code></pre></div>
+<pre class="r"><code>summary(combo)</code></pre>
 <pre><code>## 
 ## Call:
 ## summary.resamples(object = combo)
@@ -2574,6 +2551,7 @@ combo</code></pre></div>
 ## KNN   0.9523810 0.9642857 0.9761905 0.9809524       1    1    0
 ## C5    0.9523810 0.9761905 0.9761905 0.9809524       1    1    0
 ## cTree 0.9285714 0.9761905 1.0000000 0.9841270       1    1    0</code></pre>
+<p><br></p>
 </div>
 </div>
 <div id="selecting-important-features-with-rfe-varimp-and-boruta" class="section level1">
@@ -2581,9 +2559,9 @@ combo</code></pre></div>
 <div id="boruta-package" class="section level2">
 <h2><span class="header-section-number">7.1</span> Boruta package</h2>
 <p>Boruta is a feature ranking selecting algorithm based on random Forests. As you can see from the following code, Boruta will run several times the algorithm and we can then extract the most important variables.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the data</span>
-<span class="kw">data</span>(<span class="st">&quot;GlaucomaM&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;TH.data&quot;</span>)
-<span class="kw">str</span>(GlaucomaM)</code></pre></div>
+<pre class="r"><code># Load the data
+data(&quot;GlaucomaM&quot;, package = &quot;TH.data&quot;)
+str(GlaucomaM)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    196 obs. of  63 variables:
 ##  $ ag   : num  2.22 2.68 1.98 1.75 2.99 ...
 ##  $ at   : num  0.354 0.475 0.343 0.269 0.599 0.483 0.355 0.312 0.365 0.53 ...
@@ -2648,7 +2626,7 @@ combo</code></pre></div>
 ##  $ emd  : num  0.239 0.329 0.25 0.078 0.354 0.442 0.233 0.155 0.134 0.237 ...
 ##  $ mv   : num  0.035 0.022 0.029 0.023 0.034 0.028 0.012 0.023 0.029 0.022 ...
 ##  $ Class: Factor w/ 2 levels &quot;glaucoma&quot;,&quot;normal&quot;: 2 2 2 2 2 2 2 2 2 2 ...</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(GlaucomaM)</code></pre></div>
+<pre class="r"><code>summary(GlaucomaM)</code></pre>
 <pre><code>##        ag              at               as               an               ai              eag             eat              eas              ean              eai              abrg             abrt             abrs             abrn       
 ##  Min.   :1.312   Min.   :0.2010   Min.   :0.3450   Min.   :0.3970   Min.   :0.3690   Min.   :0.415   Min.   :0.1370   Min.   :0.0170   Min.   :0.0080   Min.   :0.0980   Min.   :0.0030   Min.   :0.0030   Min.   :0.0000   Min.   :0.0000  
 ##  1st Qu.:2.139   1st Qu.:0.3708   1st Qu.:0.5385   1st Qu.:0.6810   1st Qu.:0.5505   1st Qu.:1.309   1st Qu.:0.3157   1st Qu.:0.3807   1st Qu.:0.2805   1st Qu.:0.3725   1st Qu.:0.6817   1st Qu.:0.2450   1st Qu.:0.1928   1st Qu.:0.0885  
@@ -2684,80 +2662,80 @@ combo</code></pre></div>
 ##  Mean   :-0.14720   Mean   :-0.03651   Mean   :0.9050   Mean   : 0.1824   Mean   :0.2313   Mean   :0.3089   Mean   :0.03354                
 ##  3rd Qu.:-0.05625   3rd Qu.: 0.04950   3rd Qu.:0.9685   3rd Qu.: 0.2370   3rd Qu.:0.2993   3rd Qu.:0.3792   3rd Qu.:0.03825                
 ##  Max.   : 0.24500   Max.   : 0.41800   Max.   :1.3170   Max.   : 0.4510   Max.   :0.6630   Max.   :0.7430   Max.   :0.18300</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Split the data</span>
-<span class="kw">set.seed</span>(<span class="dv">100</span>)
-train_rows =<span class="st"> </span><span class="kw">createDataPartition</span>(GlaucomaM$Class, <span class="dt">p =</span> <span class="fl">0.7</span>, <span class="dt">list =</span> F)
-trainData =<span class="st"> </span>GlaucomaM[train_rows,]
-testData =<span class="st"> </span>GlaucomaM[-train_rows,]
+<pre class="r"><code># Split the data
+set.seed(100)
+train_rows = createDataPartition(GlaucomaM$Class, p = 0.7, list = F)
+trainData = GlaucomaM[train_rows,]
+testData = GlaucomaM[-train_rows,]
 
-<span class="co"># Run boruta</span>
-<span class="kw">library</span>(Boruta)
-borutaMod =<span class="st"> </span><span class="kw">Boruta</span>(Class ~., <span class="dt">data =</span> trainData, <span class="dt">doTrace =</span> <span class="dv">1</span>)</code></pre></div>
-<pre><code>## After 13 iterations, +2.5 secs:</code></pre>
+# Run boruta
+library(Boruta)
+borutaMod = Boruta(Class ~., data = trainData, doTrace = 1)</code></pre>
+<pre><code>## After 13 iterations, +2.1 secs:</code></pre>
 <pre><code>##  confirmed 15 attributes: hic, mdic, mhcg, phcg, phci and 10 more;</code></pre>
 <pre><code>##  rejected 18 attributes: abrt, ag, an, at, eai and 13 more;</code></pre>
 <pre><code>##  still have 29 attributes left.</code></pre>
-<pre><code>## After 17 iterations, +3 secs:</code></pre>
+<pre><code>## After 17 iterations, +2.5 secs:</code></pre>
 <pre><code>##  confirmed 2 attributes: abrs, mhcn;</code></pre>
 <pre><code>##  rejected 4 attributes: eag, phcs, vasn, vbrt;</code></pre>
 <pre><code>##  still have 23 attributes left.</code></pre>
-<pre><code>## After 21 iterations, +3.5 secs:</code></pre>
+<pre><code>## After 21 iterations, +3 secs:</code></pre>
 <pre><code>##  confirmed 1 attribute: emd;</code></pre>
 <pre><code>##  still have 22 attributes left.</code></pre>
-<pre><code>## After 24 iterations, +3.9 secs:</code></pre>
+<pre><code>## After 24 iterations, +3.5 secs:</code></pre>
 <pre><code>##  rejected 1 attribute: ai;</code></pre>
 <pre><code>##  still have 21 attributes left.</code></pre>
-<pre><code>## After 27 iterations, +4.2 secs:</code></pre>
+<pre><code>## After 27 iterations, +3.8 secs:</code></pre>
 <pre><code>##  confirmed 2 attributes: hvc, vbri;</code></pre>
 <pre><code>##  still have 19 attributes left.</code></pre>
-<pre><code>## After 36 iterations, +5.2 secs:</code></pre>
+<pre><code>## After 36 iterations, +4.8 secs:</code></pre>
 <pre><code>##  confirmed 2 attributes: vbrn, vbrs;</code></pre>
 <pre><code>##  rejected 1 attribute: mdn;</code></pre>
 <pre><code>##  still have 16 attributes left.</code></pre>
-<pre><code>## After 42 iterations, +6 secs:</code></pre>
+<pre><code>## After 42 iterations, +5.4 secs:</code></pre>
 <pre><code>##  confirmed 1 attribute: vbsi;</code></pre>
 <pre><code>##  still have 15 attributes left.</code></pre>
-<pre><code>## After 50 iterations, +6.9 secs:</code></pre>
+<pre><code>## After 50 iterations, +6.2 secs:</code></pre>
 <pre><code>##  rejected 1 attribute: mhcs;</code></pre>
 <pre><code>##  still have 14 attributes left.</code></pre>
-<pre><code>## After 81 iterations, +10 secs:</code></pre>
+<pre><code>## After 81 iterations, +9.6 secs:</code></pre>
 <pre><code>##  confirmed 1 attribute: vart;</code></pre>
 <pre><code>##  still have 13 attributes left.</code></pre>
 <pre><code>## After 91 iterations, +11 secs:</code></pre>
 <pre><code>##  rejected 1 attribute: vbss;</code></pre>
 <pre><code>##  still have 12 attributes left.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">borutaMod</code></pre></div>
-<pre><code>## Boruta performed 99 iterations in 11.91672 secs.
+<pre class="r"><code>borutaMod</code></pre>
+<pre><code>## Boruta performed 99 iterations in 11.508 secs.
 ##  24 attributes confirmed important: abrs, emd, hic, hvc, mdic and 19 more;
 ##  26 attributes confirmed unimportant: abrt, ag, ai, an, at and 21 more;
 ##  12 tentative attributes left: abrg, abri, abrn, as, ean and 7 more;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Retain confirmed and tentative </span>
-boruta_signif =<span class="st"> </span><span class="kw">getSelectedAttributes</span>(borutaMod, <span class="dt">withTentative =</span> <span class="ot">TRUE</span>)
-<span class="kw">print</span>(boruta_signif)</code></pre></div>
+<pre class="r"><code># Retain confirmed and tentative 
+boruta_signif = getSelectedAttributes(borutaMod, withTentative = TRUE)
+print(boruta_signif)</code></pre>
 <pre><code>##  [1] &quot;as&quot;   &quot;ean&quot;  &quot;abrg&quot; &quot;abrs&quot; &quot;abrn&quot; &quot;abri&quot; &quot;hic&quot;  &quot;mhcg&quot; &quot;mhcn&quot; &quot;mhci&quot; &quot;phcg&quot; &quot;phcn&quot; &quot;phci&quot; &quot;hvc&quot;  &quot;vbsg&quot; &quot;vbsn&quot; &quot;vbsi&quot; &quot;vasg&quot; &quot;vass&quot; &quot;vbrg&quot; &quot;vbrs&quot; &quot;vbrn&quot; &quot;vbri&quot; &quot;varg&quot; &quot;vart&quot; &quot;vars&quot; &quot;varn&quot; &quot;vari&quot; &quot;tmg&quot;  &quot;tmt&quot;  &quot;tms&quot;  &quot;tmn&quot;  &quot;tmi&quot;  &quot;rnf&quot;  &quot;mdic&quot;
 ## [36] &quot;emd&quot;</code></pre>
 <p>We can also perform a quick fix on the tentative variables</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Rough fix on tentative variables</span>
-roughFixMod =<span class="st"> </span><span class="kw">TentativeRoughFix</span>(borutaMod)
-boruta_signif =<span class="st"> </span><span class="kw">getSelectedAttributes</span>(roughFixMod
-                                      , <span class="dt">withTentative =</span> <span class="ot">TRUE</span>)
-boruta_signif</code></pre></div>
+<pre class="r"><code># Rough fix on tentative variables
+roughFixMod = TentativeRoughFix(borutaMod)
+boruta_signif = getSelectedAttributes(roughFixMod
+                                      , withTentative = TRUE)
+boruta_signif</code></pre>
 <pre><code>##  [1] &quot;as&quot;   &quot;ean&quot;  &quot;abrs&quot; &quot;hic&quot;  &quot;mhcg&quot; &quot;mhcn&quot; &quot;mhci&quot; &quot;phcg&quot; &quot;phcn&quot; &quot;phci&quot; &quot;hvc&quot;  &quot;vbsg&quot; &quot;vbsn&quot; &quot;vbsi&quot; &quot;vass&quot; &quot;vbrg&quot; &quot;vbrs&quot; &quot;vbrn&quot; &quot;vbri&quot; &quot;varg&quot; &quot;vart&quot; &quot;vars&quot; &quot;varn&quot; &quot;vari&quot; &quot;tmg&quot;  &quot;tms&quot;  &quot;tmi&quot;  &quot;rnf&quot;  &quot;mdic&quot; &quot;emd&quot;</code></pre>
 <div id="plot-the-boruta-selected-variables" class="section level3">
 <h3><span class="header-section-number">7.1.1</span> Plot the boruta selected variables</h3>
 <p>The selected variables are green:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(roughFixMod, <span class="dt">cex.axis =</span> <span class="fl">0.7</span>, <span class="dt">las =</span> <span class="dv">2</span>
-     , <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;Variable Importance&quot;</span>)</code></pre></div>
+<pre class="r"><code>plot(roughFixMod, cex.axis = 0.7, las = 2
+     , xlab = &quot;&quot;, main = &quot;Variable Importance&quot;)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-55-1.png" /><!-- --></p>
 </div>
 <div id="importance-scores-with-att-stats" class="section level3">
 <h3><span class="header-section-number">7.1.2</span> Importance scores with ATT stats</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">imps =<span class="st"> </span><span class="kw">attStats</span>(roughFixMod)
-imps =<span class="st"> </span>imps[<span class="kw">order</span>(-imps$meanImp),]
-<span class="kw">rownames</span>(imps)</code></pre></div>
+<pre class="r"><code>imps = attStats(roughFixMod)
+imps = imps[order(-imps$meanImp),]
+rownames(imps)</code></pre>
 <pre><code>##  [1] &quot;vari&quot; &quot;varg&quot; &quot;hic&quot;  &quot;tmi&quot;  &quot;vars&quot; &quot;mdic&quot; &quot;varn&quot; &quot;phci&quot; &quot;phcg&quot; &quot;phcn&quot; &quot;tms&quot;  &quot;tmg&quot;  &quot;mhcg&quot; &quot;mhcn&quot; &quot;vbsn&quot; &quot;rnf&quot;  &quot;vbri&quot; &quot;hvc&quot;  &quot;vbrs&quot; &quot;vbrn&quot; &quot;abrs&quot; &quot;emd&quot;  &quot;vbsi&quot; &quot;vart&quot; &quot;mhci&quot; &quot;abri&quot; &quot;tmt&quot;  &quot;ean&quot;  &quot;vbrg&quot; &quot;abrn&quot; &quot;abrg&quot; &quot;tmn&quot;  &quot;as&quot;   &quot;vbss&quot; &quot;vass&quot;
 ## [36] &quot;vbsg&quot; &quot;vasg&quot; &quot;mdn&quot;  &quot;mhcs&quot; &quot;ai&quot;   &quot;eag&quot;  &quot;phcs&quot; &quot;ag&quot;   &quot;mr&quot;   &quot;eat&quot;  &quot;at&quot;   &quot;eai&quot;  &quot;vbst&quot; &quot;vasi&quot; &quot;abrt&quot; &quot;an&quot;   &quot;mdi&quot;  &quot;vasn&quot; &quot;phct&quot; &quot;mdg&quot;  &quot;vbrt&quot; &quot;eas&quot;  &quot;mds&quot;  &quot;mhct&quot; &quot;mdt&quot;  &quot;vast&quot; &quot;mv&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(imps)</code></pre></div>
+<pre class="r"><code>head(imps)</code></pre>
 <pre><code>##       meanImp medianImp   minImp    maxImp normHits  decision
 ## vari 9.978837 10.023121 8.090273 11.491599        1 Confirmed
 ## varg 9.261466  9.296070 8.004088 10.591989        1 Confirmed
@@ -2773,9 +2751,9 @@ imps =<span class="st"> </span>imps[<span class="kw">order</span>(-imps$meanImp)
 <p>The caret package provide the <strong>varImp()</strong> function.</p>
 <div id="varimp-with-rpart-model" class="section level3">
 <h3><span class="header-section-number">7.2.1</span> varImp with rpart model</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rPartMod =<span class="st"> </span><span class="kw">train</span>(Class ~<span class="st"> </span>., <span class="dt">data =</span> trainData, <span class="dt">method =</span> <span class="st">&quot;rpart&quot;</span>)
-rpartVar =<span class="st"> </span><span class="kw">varImp</span>(rPartMod)
-rpartVar</code></pre></div>
+<pre class="r"><code>rPartMod = train(Class ~ ., data = trainData, method = &quot;rpart&quot;)
+rpartVar = varImp(rPartMod)
+rpartVar</code></pre>
 <pre><code>## rpart variable importance
 ## 
 ##   only 20 most important variables shown (out of 62)
@@ -2804,9 +2782,9 @@ rpartVar</code></pre></div>
 </div>
 <div id="varimp-with-random-forest-model" class="section level3">
 <h3><span class="header-section-number">7.2.2</span> varImp with random forest model</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rfMod =<span class="st"> </span><span class="kw">train</span>(Class ~<span class="st"> </span>., <span class="dt">data =</span> trainData, <span class="dt">method =</span> <span class="st">&quot;rf&quot;</span>)
-rfVar =<span class="st"> </span><span class="kw">varImp</span>(rfMod)
-rfVar</code></pre></div>
+<pre class="r"><code>rfMod = train(Class ~ ., data = trainData, method = &quot;rf&quot;)
+rfVar = varImp(rfMod)
+rfVar</code></pre>
 <pre><code>## rf variable importance
 ## 
 ##   only 20 most important variables shown (out of 62)
@@ -2837,31 +2815,31 @@ rfVar</code></pre></div>
 <div id="recursive-feature-selection-rfe" class="section level2">
 <h2><span class="header-section-number">7.3</span> Recursive Feature selection (RFE)</h2>
 <p>The RFE is a robust that systematically resamples to give an unbiased estimate of variable importance.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Number of subsets to be retained</span>
-subsets =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>)
+<pre class="r"><code># Number of subsets to be retained
+subsets = c(1:5, 10, 15, 20, 25, 35, 45, 55)
 
-x =<span class="st"> </span>trainData[,-<span class="dv">63</span>]
-y =<span class="st"> </span>trainData[,<span class="dv">63</span>]
-<span class="co"># Remove high correlated predictors</span>
-correls =<span class="st"> </span><span class="kw">findCorrelation</span>(<span class="kw">cor</span>(x), <span class="dt">cutoff =</span> <span class="fl">0.9</span>)
-if(<span class="kw">length</span>(correls) !=<span class="st"> </span><span class="dv">0</span>){x =<span class="st"> </span>x[, -correls]}
+x = trainData[,-63]
+y = trainData[,63]
+# Remove high correlated predictors
+correls = findCorrelation(cor(x), cutoff = 0.9)
+if(length(correls) != 0){x = x[, -correls]}
 
-<span class="co"># Create folds</span>
-<span class="kw">set.seed</span>(<span class="dv">100</span>)
-index =<span class="st"> </span><span class="kw">createFolds</span>(y , <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">returnTrain =</span> T)
+# Create folds
+set.seed(100)
+index = createFolds(y , k = 10, returnTrain = T)
 
-<span class="co"># Setting up the control argument</span>
-ctrl =<span class="st"> </span><span class="kw">rfeControl</span>(<span class="dt">functions =</span> rfFuncs
-                  , <span class="dt">method =</span> <span class="st">&quot;repeatedcv&quot;</span>
-                  , <span class="dt">repeats =</span> <span class="dv">5</span>
-                  , <span class="dt">index =</span> index
-                  , <span class="dt">verbose =</span> <span class="ot">TRUE</span>)
+# Setting up the control argument
+ctrl = rfeControl(functions = rfFuncs
+                  , method = &quot;repeatedcv&quot;
+                  , repeats = 5
+                  , index = index
+                  , verbose = TRUE)
 
-<span class="co"># Creating the RFE</span>
-rfProfile =<span class="st"> </span><span class="kw">rfe</span>(<span class="dt">x =</span> x
-                , <span class="dt">y =</span> y
-                , <span class="dt">sizes =</span> subsets
-                , <span class="dt">rfeControl =</span> ctrl)</code></pre></div>
+# Creating the RFE
+rfProfile = rfe(x = x
+                , y = y
+                , sizes = subsets
+                , rfeControl = ctrl)</code></pre>
 <pre><code>## +(rfe) fit Fold01 size: 37 
 ## -(rfe) fit Fold01 size: 37 
 ## +(rfe) imp Fold01 
@@ -3102,8 +3080,8 @@ rfProfile =<span class="st"> </span><span class="kw">rfe</span>(<span class="dt"
 ## -(rfe) fit Fold10 size:  2 
 ## +(rfe) fit Fold10 size:  1 
 ## -(rfe) fit Fold10 size:  1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Checking the variable importance</span>
-<span class="kw">varImp</span>(rfProfile)</code></pre></div>
+<pre class="r"><code># Checking the variable importance
+varImp(rfProfile)</code></pre>
 <pre><code>##       Overall
 ## vari 8.871799
 ## hic  8.136998
@@ -3131,7 +3109,7 @@ rfProfile =<span class="st"> </span><span class="kw">rfe</span>(<span class="dt"
 ## vasg 3.232743
 ## tmn  3.231133
 ## mhcs 2.972729</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rfProfile</code></pre></div>
+<pre class="r"><code>rfProfile</code></pre>
 <pre><code>## 
 ## Recursive feature selection
 ## 

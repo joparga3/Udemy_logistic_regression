@@ -1,0 +1,7 @@
+name: "Logistic regression"
+navbar:
+  title: "Logistic regression"
+  left:
+    - text: "Logistic regression"
+      href: index.html
+

@@ -1,0 +1,913 @@
+---
+title: "Logistic regression"
+author: "Jose Parreno Garcia"
+date: "December 2017"
+output: 
+  html_document:
+    toc: true # table of content true
+    depth: 6  # upto three depths of headings (specified by #, ##, ###, ####)
+    number_sections: true  ## if you want number sections at each table header
+    # theme: spacelab  # many options for theme, this one is my favorite.
+    # highlight: tango  # specifies the syntax highlighting style
+    keep_md: true
+---
+<style>
+body {
+text-align: justify}
+</style>
+
+<br>
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width = 250)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source_path = getwd()
+```
+
+```{r results='hide', message=FALSE, warning=FALSE}
+library(knitr)
+```
+
+In the previous section we learnt how to model and predict continuous response variables. In this section we will learn how to deal with categorial variables:
+
+* The concepts
+* Understanding accuracy measures
+* How to build and predictive model with the caret package
+
+* How to model and predict categorical variables using:
+
+* Logistic regression
+* Naive bayes
+* KNN
+* rpart, cTree and C5.0
+* Advanced feature selection techniques
+
+<br>
+
+# Logistic regression - concept:
+
+If we use linear regression to model dichotomous (2) variable the resulting model might not restrict the predictive values to only 0 or 1. You can see in the following image how using linear regression will build a line where, at any given value of X it can many different values of Y. Opposed to that, is logistic regression, which generally shows an "s" shape. With this S shape we either achive, values very close to 0, values very close to 1 and a small region with values between 0 and 1.
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/1.PNG"))
+```
+
+In order to achieve this "s" shape, the log odds of the particular event we are trying to predict, is modelled. The aim of this section is not to demostrate the equations (remember we are doing an express course), so I will leave below the equations:
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/2.PNG"))
+```
+
+This equation can be implemented using the **glm** function by setting one of the arguments to *binomial*. In addition, when predicting, we need to ensure we put the *type=response*, if not, we will be calculating the log odds of P (Z values) instead of the actual probability. Anyway we will see this in the following sections.
+
+<br>
+
+# Implementing a simple logistic regression
+
+We will be using the **BreastCancer** dataset from the **mlbenc** package. The goal for this logistic regression model will be to predict if the cases in the dataset are benign or not. In this case, the *class*, is the response variable, and the rest of the variables are factor variables.
+
+## Getting the data 
+
+```{r fig.width=3, fig.height=3}
+require(mlbench)
+data(BreastCancer, package = 'mlbench')
+bc = BreastCancer[complete.cases(BreastCancer), ]
+
+# Checking the dataset
+str(bc)
+summary(bc)
+```
+
+## Simple preprocessing
+
+As you can observe:
+
+* There is an ID column. We dont really want this, so we will take it out.
+* The first variables seem to be ordered factors, so we could change these to numeric. To be clear, to do this, we need to be careful and first transform the factor into a character, and then into a number. If not, the values can be messed up. Anyway, this is an optional step.
+* Change the name of the class to a factor of 0 and 1
+
+```{r fig.width=3, fig.height=3}
+# Deleting first column
+bc = bc[, -which(colnames(bc) == "Id")]
+
+# Transforming ordered factors into numeric 
+for(i in 1:9){
+  bc[,i] = as.numeric(as.character(bc[,i]))
+}
+
+# Changing naming of the response variable
+bc$Class = ifelse(bc$Class == "malignant",1,0)
+bc$Class = factor(bc$Class, levels = c(0,1))
+```
+
+## Splitting
+
+As you can see from the table function, there is some class imbalance (not much compared to other problems), but still there is. We could do any of the following:
+
+* We need to ensure that any samples we create have the same distribution of classes. So if you want to create the train or test samples directly with this unbalanced classes, then ensure you use the **sample.split()** function.
+* However, given that I assume you know how to do this from the previous section, we can look at the concepts of **downsizing, upsampling and hybrid between both**.
+* Basically, downsizing is taking the majority class data (in this case the cases without cancer), and picking random records until to match approximantely the number of records in the minority class (in this case 239 cases).
+* Upsizing is the opposite. Taking the minority class and randomnly duplicating cases, until you reach approximantely the number of cases in the majority class.
+* HYbrid is a bit more complex, but basically there are a couple of widely used algorithms for this: the SMOTE and the ROSE algorithm.
+
+```{r fig.width=3, fig.height=3}
+table(bc$Class)
+
+# Creating Train and Test data using the caret package
+library(caret)
+
+# Define the not in function
+'%ni%' = Negate('%in%')
+
+# Prevent priting scientific notation
+options(scipen = 999)
+
+# Prep train and test 
+set.seed(100)
+trainDataIndex = createDataPartition(bc$Class, p = 0.7, list = F)
+trainData = bc[trainDataIndex,]
+testData = bc[-trainDataIndex,]
+
+# Downsampling
+down_train = downSample(x = trainData[, colnames(trainData) %ni% "Class"]
+                        , y = trainData$Class)
+
+table(down_train$Class)
+
+# Upsampling
+up_train = upSample(x = trainData[, colnames(trainData) %ni% "Class"]
+                        , y = trainData$Class)
+
+table(up_train$Class)
+```
+
+## First model using the down sample set
+
+We use the down sample train data to model our first model. Then we can test it on the initial train/test datasets.
+
+```{r fig.width=3, fig.height=3}
+# Building the model with the down sized data. Ensure you add family binomial
+logitmod = glm(Class ~ Cl.thickness + Cell.size + Cell.shape, family = binomial, data = down_train)
+summary(logitmod)
+
+# Predict the probability of the event for each observation
+pred = predict(logitmod, newdata = testData, type = "response")
+head(pred)
+```
+
+As you can see, we have calculated probabilites of each record. What we haven't assigned, is those probabilites to a certain class. Common practice is to start simple and have a treshold of 0.5, meaning that anything below that will get assigned to 0 and anything above, will get assigned to 1. We will do this, but the threshold is something we could play with depending on our goal metrics. We will talk about this later.
+
+```{r fig.width=3, fig.height=3}
+# Converting the probabilites to class predictions
+y_pred_num = ifelse(pred > 0.5, 1, 0)
+y_pred = factor(y_pred_num, levels = c(0,1))
+y_act = testData$Class
+```
+
+## Confusion matrix for this first model
+
+You can see that the first model has initially an accuracy of 94%. That is encouraging, but let's think about this for a moment. If we had a problem where we had 100 records, being 99 of those benign and only 1 cancer, then we could have a 99% accuracy if we predicted that all of them where benign (ie we would be only making one error). However, that error is the one that we actually want to predict, therefore, accuracy is not the metric we want to use. 
+
+That is why we compute the confusion matrix. In the confusion metric we can see:
+*  Accuracy
+* Sensitivity, which represents the proportion of actual positive events that the model predicted as a positive event. In this case, 70/(70+1)
+* Specificity, is the proportion of non positive events (ie class 0) that the model predicted correctly, 122/(122+11)
+
+In our case, specificity would be very important to us, and we see that out of 71 cases, we are actually predicting 70 correctly! Quite a good start.
+
+```{r fig.width=3, fig.height=3}
+# Accuracy
+mean(y_pred == y_act)
+
+# Confusion matrix
+caret::confusionMatrix(y_pred, y_act, positive = "1")
+```
+
+Remember how we assigned a threshold before to define a class based on the probability we calculated? Well, this threshold is want will determine the metrics we just mentioned. As an example, imagine that we were very conservative, and we want to flag any possible case of cancer if we detect the slightest symptom, then our threshold would be quite low. This would surely increase our sensitivity, probably making it 100%, but we would making more errors with the non-cancer cases, ie reducing specificity. Let's check that very quickly below.
+
+```{r fig.width=3, fig.height=3}
+y_pred_num1 = ifelse(pred > 0.1, 1, 0)
+y_pred1 = factor(y_pred_num1, levels = c(0,1))
+y_act1 = testData$Class
+
+caret::confusionMatrix(y_pred1, y_act1, positive = "1")
+```
+
+This example shows how building a logistic model also involves some tradeoff between our goal metrics. One way to go about his is just how i've done it, which is manually changing and reviewing results. Another much more intelligent way is using the ROC curves.
+
+## ROC curve
+
+With this curve, we can plot the results of sensitivity and specificity and check what threshold achieves the balance we want to have. 
+
+* One plot we can make is to use te area under the ROC curve. This is a proxy for accuracy.
+* The other plot is adding the threshold.
+
+```{r fig.width=7, fig.height=7}
+library(InformationValue)
+plotROC(y_act, pred)
+
+library(ROCR)
+ROCRpred = prediction(pred, y_act)
+ROCRperf = performance(ROCRpred, "tpr", "fpr")
+plot(ROCRperf, colorize = TRUE)
+```
+
+<br>
+
+# Naive Bayes Classifier
+
+We are going to look at:
+
+* What is conditional probability?
+* Bayes rules
+* Naive Bayes
+* Gaussian Naive Bayes
+* Implemeting in R
+
+## Conditional probability
+
+When we speak about the probability of A given B, this is equivalent to calculating the probability of A occurring knowing that B has already occured $P(A|B)$. Numeric example below:
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/3.PNG"))
+include_graphics(paste0(source_path,"/images/4.PNG"))
+include_graphics(paste0(source_path,"/images/5.PNG"))
+```
+
+## Bayes Rules
+
+From the conditional probability notation, we can derive Bayes rule. It is basically a way of calculating the unknown from the known.
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/6.PNG"))
+include_graphics(paste0(source_path,"/images/7.PNG"))
+```
+
+## Naive Bayes
+
+In real world problems, we typically have multiple X variables. It is called Naive because of the naive assumption that the X variales are all independent. If they were independent, we could extend the Bayes formula to what you can observe below. Just always bare in mind that the X variable are not usually all indepedent.
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/8.PNG"))
+include_graphics(paste0(source_path,"/images/9.PNG"))
+include_graphics(paste0(source_path,"/images/10.PNG"))
+include_graphics(paste0(source_path,"/images/11.PNG"))
+include_graphics(paste0(source_path,"/images/12.PNG"))
+include_graphics(paste0(source_path,"/images/13.PNG"))
+include_graphics(paste0(source_path,"/images/14.PNG"))
+```
+
+## Gaussian Naive Bayes
+
+So far we have shown how would we use Naive Bayes to predict a class with multiple options. But how do we compute probabilities when the X variable is continuous?
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/15.PNG"))
+```
+
+## Implemeting in R
+
+### Loading the data
+
+```{r fig.width=7, fig.height=7}
+data(Vehicle, package = "mlbench")
+
+str(Vehicle)
+summary(Vehicle)
+```
+
+### Small checks on the data - featurePlot
+
+Usually, the useful feature is the one that has significant shifts in the mean value across the different classes. Think it the other way round, if all vehicle classes output the same mean for a variable, then that variable is not going to be very helpful in differentiating amongst the cars. In the plot below you can check Sc.Var.maxis is a good candidate variable.
+
+```{r fig.width=7, fig.height=7}
+featurePlot(Vehicle[,-19], Vehicle[,19], plot = "box")
+```
+
+### Sampling the data
+
+```{r fig.width=7, fig.height=7}
+set.seed(100)
+
+train_rows = createDataPartition(Vehicle$Class, p = 0.7, list = F)
+train = Vehicle[train_rows, ]
+test = Vehicle[-train_rows, ]
+```
+
+### Train the model with Naive Bayes
+
+```{r fig.width=7, fig.height=7}
+library(klaR)
+
+nb_mod = NaiveBayes(Class ~ ., data = train)
+pred = predict(nb_mod, test)
+```
+
+### Metrics
+
+```{r fig.width=7, fig.height=7}
+tab = table(pred$class, test$Class)
+caret::confusionMatrix(tab)
+```
+
+### Plot naive bayes
+
+The following plots show the distribution of the different classes for the different variables. The more separate the distribution lines are, the more useful the variable is.
+
+```{r fig.width=5, fig.height=5}
+plot(nb_mod)
+```
+
+<br>
+
+# KNN - k Nearest Neighbours
+
+We are going to learn about
+
+* Steps for kNN
+* Distance matrix
+* Normalization
+* k-NN for classification
+* k-NN for regression
+* Implementation in R
+
+## Steps for kNN
+
+kNN is a machine learning algorithm that can predict both categorial and continuous variables. It predicts the value of a record based on the information of it's neighbours. Predicting the class of a data point happens in 5 steps:
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/16.PNG"))
+```
+
+## Distance matrix
+
+Distances can be calculated with several measures. Some of them are shown below. Regardless of which one you choose, we need to calculate a matrix of distances which represents, for each record, the distance to all other records.
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/17.PNG"))
+```
+
+```{r fig.width=7, fig.height=7}
+data("iris")
+head(iris)
+```
+
+### Calculating in R
+
+```{r fig.width=7, fig.height=7}
+# Euclidean Distance matrix - the first 10 rows using the values of the first 4 columns
+data(iris)
+class(iris)
+
+d1 = dist(iris[1:10,c(1:4)])
+d1
+
+# As an example of how this is calculated
+iris[1:2,]
+sqrt(((5.1-4.9)^2 + (3.5-3.0)^2 + (1.4-1.4)^2 + (0.2-0.2)^2))
+```
+
+We can answer this question with the distance matrix. As an example, for the first record we see that record 5 and 8 are quite close compared to the other records. 
+
+So, taking it back to one of the steps in kNN:
+
+* Remember we specify k. Let's say k = 3.
+* The classification output for the first record will be the majority or average class of the 3 nearest records.
+
+## Normalization
+
+It is important to normalize before taking any further action. This is because, if we have variables that have different orders of magnitude, they will skew the end classification. We need to bring them to an equivalent order. There are many ways to normalise record, but let's add a simple way of doing so, which is to chane the range so that all features are between 0 and 1.
+
+```{r fig.width=7, fig.height=7}
+normalize = function(x){return((x-min(x))/(max(x)-min(x)))}
+
+normalized_iris = lapply(iris[,-5], normalize)
+iris_n = data.frame(normalized_iris, Species = iris[,5])
+summary(iris_n)
+```
+
+### Recalculating distances after normalization
+
+As you can see, the neighbours have now changed. This is why normalization is so important! We don't want variables that have a higher magnitude have a higher impact just because of so. We want them to be important regardless of their order of magnitude.
+
+```{r fig.width=7, fig.height=7}
+d2 = dist(iris_n[1:10,c(1:4)])
+d2
+```
+
+## kNN for classification
+
+```{r fig.width=7, fig.height=7}
+# Split the data
+set.seed(100)
+train_rows = createDataPartition(iris_n$Species, p = 0.7, list = F)
+train = iris_n[train_rows, ]
+test = iris_n[-train_rows, ]
+
+# Build the model
+fit = caret::knn3(train[, -5], train[, 5], k = 5)
+
+# Make predictions
+predictions = predict(fit, test[, -5], type = "class")
+tab = table(predictions, test$Species)
+caret::confusionMatrix(tab)
+
+```
+
+## kNN for continuous variables
+
+
+```{r fig.width=7, fig.height=7}
+# Get the data
+data(Boston, package = "MASS")
+head(Boston)
+
+# Split the data
+set.seed(100)
+train_rows = createDataPartition(Boston$medv, p = 0.7, list = F)
+train = Boston[train_rows, ]
+test = Boston[-train_rows, ]
+
+# Build the model
+fit = caret::knnreg(train[, -14], train[, 14], k = 5)
+
+# Make predictions
+predictions = predict(fit, test[, -5], type = "class")
+DMwR::regr.eval(test$medv, predictions)
+```
+
+
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/18.PNG"))
+```
+
+<br>
+
+# Building tree based models using rpart, cTree and C5.0
+
+In this section we will understand:
+
+* How decision trees work
+
+* Tree structure
+* Information gain, entropy, gini index, classification error
+* Why is it called a greedy algorithm
+
+* Algorithms and Implementations
+
+* rpart(CART)
+* cTree
+* C5.0
+
+## How do decision trees work? - cTree example
+
+```{r fig.width=7, fig.height=7}
+library(caret)
+
+# Splitting data
+train_rows = createDataPartition(iris$Species, p = 0.7, list = F)
+trainData = iris[train_rows, ]
+testData = iris[-train_rows, ]
+
+# partykit library for cTree algorithm
+library(partykit)
+
+ctMod = ctree(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, data = trainData)
+print(ctMod)
+plot(ctMod)
+
+```
+
+This is a classification tree. 
+
+* It is a hierarchical structure that aims to classify a categorial response variable by learning how each predictor divides the Y variable. 
+* The very top of the tree is the **root node** and the ones at the very end are called the **terminal nodes**. 
+* The minimum number of observations required in order to be considered for a split and the number of branches is controlled using parameters of the algorithm
+* A 100% pure node will have only one class of Y
+* The goal is to make the terminal node as pure as possible while not growing branches that are too deep. 
+
+So how is the tree grown?
+
+* Each node is nothing but a rule based on an x variable. 
+* The rules are decided such that the resulting groups are as pure as possible.
+* But how is the impurity/purity of groups measured?
+* This is calculated via certain metrics, like for example, Entropy or Information gain. 
+* Basically, split that provides the most information gain, goes the first.
+* This is the reason why decision trees are called greedy algorithms. This is because it is not guaranteed they will return the purest possible terminal nodes,
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/19.PNG"))
+include_graphics(paste0(source_path,"/images/20.PNG"))
+include_graphics(paste0(source_path,"/images/21.PNG"))
+include_graphics(paste0(source_path,"/images/22.PNG"))
+```
+
+## cTree algorithm - controlling parameters
+
+We have seen how to implement a cTree algorithm. The cTree algorithms has many parameters feeding into it and we can play around with those parameters using the **ctree_control** function. Let's check this creating another tree.
+
+```{r fig.width=7, fig.height=7}
+ctMod_2 = ctree(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
+                , control = ctree_control(maxdepth = 2)
+                , data = trainData)
+
+print(ctMod_2)
+plot(ctMod_2)
+```
+
+## Predict using the previous 2 models
+
+```{r fig.width=7, fig.height=7}
+# Predict 1
+out1 = predict(ctMod, testData)
+
+# Predict 2
+out2 = predict(ctMod_2, testData)
+
+# How many miss matched predict 1
+sum(testData[, 5] != out1)
+
+# How many miss matched predict 1
+sum(testData[, 5] != out2)
+```
+
+## rpart
+
+### Control parameters
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/23.PNG"))
+```
+
+### Implement in R
+
+```{r fig.width=7, fig.height=7}
+library(rpart)
+
+# Model
+rpartMod = rpart(Species ~ .
+                 , data = trainData
+                 , control = rpart.control(minsplit = 5
+                                           , cp = 0
+                                           , maxdepth = 4))
+rpartMod
+
+# Prediction
+pred = predict(rpartMod, testData, type = "class")
+sum(testData[, 5] != pred)
+```
+
+### Fancy rpart tree plotting
+
+```{r fig.width=7, fig.height=7}
+library(rattle)
+
+# Option 1 - fancyRpartPlot
+fancyRpartPlot(rpartMod)
+
+# Option 2 - convert to a partykit object and plot as a cTree plot
+iris_party = as.party.rpart(rpartMod)
+plot(iris_party)
+
+# Option 3 - manually
+library(rpart.plot)
+prp(rpartMod, extra = 1, type = 2)
+```
+
+## C5.0 algorithm
+
+The C5.0 algorithm incorporates the boosting algorithm.  
+
+### Tree
+
+```{r fig.width=7, fig.height=7}
+library(C50)
+
+c5Mod = C5.0(Species ~ ., data = trainData
+             , control = C5.0Control(winnow = F))
+
+summary(c5Mod)
+plot(c5Mod)
+C5imp(c5Mod)
+```
+
+### Rules
+
+```{r fig.width=7, fig.height=7}
+library(C50)
+
+c5Mod = C5.0(Species ~ ., data = trainData
+             , control = C5.0Control(winnow = F)
+             , rules = T)
+
+summary(c5Mod)
+```
+
+<br>
+
+# Building Predictive Models with the caret Package
+
+Caret will enable you to control, evalute and train the model all within the same package.
+
+## Preprocessing
+
+```{r fig.width=7, fig.height=7}
+library(caret)
+
+# Normalze all X's to range from 0 to 1
+preprocessParams = preProcess(iris[,1:4], method = c("range"))
+preprocessParams
+
+# Apply the transform
+normalized = predict(preprocessParams, iris[,1:4])
+iris_n = cbind(normalized, Species = iris$Species)
+summary(iris_n)
+
+```
+
+Here is the full list of transformations you can apply using the method parameter in the preprocessParams function in the caret package
+
+```{r echo=FALSE, fig.width=3, fig.height=3}
+include_graphics(paste0(source_path,"/images/24.PNG"))
+```
+
+## Training and predicting with knn using caret package
+
+The most powerful feature in the caret package is the train function. If you go to the following web page, you will see the full list of predictive models that the caret package can handle.
+
+**http://topepo.github.io/caret/available-models.html**
+
+```{r fig.width=7, fig.height=7}
+set.seed(100)
+train_rows = createDataPartition(iris_n$Species, p = 0.7, list = F)
+trainData = iris_n[train_rows, ]
+testData = iris_n[-train_rows, ]
+fit = train(Species ~ ., data = trainData, preProcess = c("range"), method = "knn")
+fit
+```
+
+Check that we can perform multiple steps within the train function in caret: both the preProcess step and the method chosen to train the data. The results show:
+
+* Preprocessing was a rescaling to the range of 0 to 1, for 4 features
+* Resampling means that the algorithm was run on the train data 25 times by resampling.
+* Then for different values of the k parameter, we see the accuracy and kappa metrics.
+
+```{r fig.width=7, fig.height=7}
+# predict using the final model in the fit object
+pred = predict(fit$finalModel, newdata = testData[,1:4], type="class")
+```
+
+## Controlling training method parameters caret package
+
+We can do this by using the trainControl function that can be used as an input to the train function.
+
+### Creating the trainControl object and passing to a model
+```{r fig.width=7, fig.height=7}
+tc = trainControl(method = "repeatedcv", number = 5, repeats = 3)
+
+fit_repeatedcv = train(Species ~ ., data = trainData, 
+                       preProcess = c("range")
+                       , method = "knn"
+                       , trControl = tc)
+
+fit_repeatedcv
+```
+
+### Changing the evaluation metric
+```{r fig.width=7, fig.height=7}
+# We can also change the evaluation metric that the method will use to check the best model
+fit_repeatedcv_kappa = train(Species ~ ., data = trainData, 
+                       preProcess = c("range")
+                       , method = "knn"
+                       , trControl = tc
+                       , metric= "Kappa")
+
+fit_repeatedcv_kappa
+```
+
+### Adding more metric information to the output
+```{r fig.width=7, fig.height=7}
+# Add to the control parameters a summary function
+tc = trainControl(method = "repeatedcv", number = 5, repeats = 3
+                  , summaryFunction = multiClassSummary)
+
+
+# We can also change the evaluation metric that the method will use to check the best model
+fit_repeatedcv_kappa = train(Species ~ ., data = trainData, 
+                       preProcess = c("range")
+                       , method = "knn"
+                       , trControl = tc
+                       , metric= "Kappa")
+
+fit_repeatedcv_kappa
+```
+
+## Controlling the tuning of the algorithms parameters
+
+As you know, there are multiple training algorithms we can use to train a model. Sometimes, some of these models have many possible input parameters that we can change, so a very helpful function is the modelLookup, that will output the list of parameters you can use (or alternatively, you can use the webpage above).
+
+```{r fig.width=7, fig.height=7}
+# As you can see, knn as only 1 input parameter to change
+modelLookup("knn")
+```
+
+### Defining grid search
+
+```{r fig.width=7, fig.height=7}
+# Create the grid for knn
+grid = expand.grid(k = c(5,7,11,13,17,19,23,25))
+
+fit_repeatedcv_kappa_tunegrid = train(Species ~ .,
+                                      data = trainData
+                                      , preProcess = c("range")
+                                      , method = "knn"
+                                      , trControl = tc
+                                      , metric = "Kappa"
+                                      , tuneGrid = grid)
+
+
+fit_repeatedcv_kappa_tunegrid
+fit_repeatedcv_kappa_tunegrid$finalModel
+
+
+```
+
+## C5 algorithm with caret
+
+```{r fig.width=7, fig.height=7}
+# Create the grid for knn
+c5_fit_repeatedcv_kappa = train(Species ~ .
+                                , data = trainData
+                                , preProcess = c("range")
+                                , method = "C5.0"
+                                , trControl = tc
+                                , metric = "Kappa"
+                                , tuneLength = 10)
+
+c5Fit = c5_fit_repeatedcv_kappa$finalModel
+out = predict(c5Fit, testData, type = "class")
+caret::confusionMatrix(out, testData$Species)
+```
+
+```{r fig.width=7, fig.height=7}
+# Multiclass summary on test data
+testResults = predict(c5Fit, testData, type = "prob")
+testResults = data.frame(testResults)
+testResults$obs = testData$Species
+testResults$pred = predict(c5Fit, testData, type = "class")
+multiClassSummary(testResults, lev = levels(testData$Species))
+```
+
+## cTree algorithm with caret
+
+```{r fig.width=7, fig.height=7}
+library(party)
+
+# Create the grid for knn
+ctree_fit_repeatedcv_kappa = train(Species ~ .
+                                , data = trainData
+                                , preProcess = c("range")
+                                , method = "ctree"
+                                , trControl = tc
+                                , metric = "Kappa"
+                                , tuneLength = 10)
+
+```
+
+## Comparing the 3 built models  with Resample function
+
+If you check the output of the resamples function, we can see for example that, for mean sensitivity, the ctree algorithm provided the best result.
+
+```{r fig.width=7, fig.height=7}
+combo = resamples(list(KNN = fit_repeatedcv_kappa
+                       , C5 = c5_fit_repeatedcv_kappa
+                       , cTree = ctree_fit_repeatedcv_kappa))
+
+combo
+
+summary(combo)
+
+```
+
+<br>
+
+# Selecting important features with RFE, varImp and Boruta
+
+## Boruta package
+
+Boruta is a feature ranking selecting algorithm based on random Forests. As you can see from the following code, Boruta will run several times the algorithm and we can then extract the most important variables.
+
+```{r fig.width=7, fig.height=7}
+# Load the data
+data("GlaucomaM", package = "TH.data")
+str(GlaucomaM)
+summary(GlaucomaM)
+
+# Split the data
+set.seed(100)
+train_rows = createDataPartition(GlaucomaM$Class, p = 0.7, list = F)
+trainData = GlaucomaM[train_rows,]
+testData = GlaucomaM[-train_rows,]
+
+# Run boruta
+library(Boruta)
+borutaMod = Boruta(Class ~., data = trainData, doTrace = 1)
+borutaMod
+
+# Retain confirmed and tentative 
+boruta_signif = getSelectedAttributes(borutaMod, withTentative = TRUE)
+print(boruta_signif)
+
+```
+
+We can also perform a quick fix on the tentative variables
+
+```{r fig.width=7, fig.height=7}
+# Rough fix on tentative variables
+roughFixMod = TentativeRoughFix(borutaMod)
+boruta_signif = getSelectedAttributes(roughFixMod
+                                      , withTentative = TRUE)
+boruta_signif
+```
+
+### Plot the boruta selected variables
+
+The selected variables are green:
+
+```{r fig.width=7, fig.height=7}
+plot(roughFixMod, cex.axis = 0.7, las = 2
+     , xlab = "", main = "Variable Importance")
+```
+
+### Importance scores with ATT stats
+
+```{r fig.width=7, fig.height=7}
+imps = attStats(roughFixMod)
+imps = imps[order(-imps$meanImp),]
+rownames(imps)
+head(imps)
+```
+
+## varImp - variable importance
+
+In general, the importance of a variable is computed based on how much the accuracy drops by removing that variable. So, the computed importance is relative and vary based on the modelling algorithm.
+
+The caret package provide the **varImp()** function.
+
+### varImp with rpart model
+
+```{r fig.width=7, fig.height=7}
+rPartMod = train(Class ~ ., data = trainData, method = "rpart")
+rpartVar = varImp(rPartMod)
+rpartVar
+```
+
+### varImp with random forest model
+
+```{r fig.width=7, fig.height=7}
+rfMod = train(Class ~ ., data = trainData, method = "rf")
+rfVar = varImp(rfMod)
+rfVar
+```
+
+## Recursive Feature selection (RFE)
+
+The RFE is a robust that systematically resamples to give an unbiased estimate of variable importance.
+
+```{r fig.width=7, fig.height=7}
+# Number of subsets to be retained
+subsets = c(1:5, 10, 15, 20, 25, 35, 45, 55)
+
+x = trainData[,-63]
+y = trainData[,63]
+# Remove high correlated predictors
+correls = findCorrelation(cor(x), cutoff = 0.9)
+if(length(correls) != 0){x = x[, -correls]}
+
+# Create folds
+set.seed(100)
+index = createFolds(y , k = 10, returnTrain = T)
+
+# Setting up the control argument
+ctrl = rfeControl(functions = rfFuncs
+                  , method = "repeatedcv"
+                  , repeats = 5
+                  , index = index
+                  , verbose = TRUE)
+
+# Creating the RFE
+rfProfile = rfe(x = x
+                , y = y
+                , sizes = subsets
+                , rfeControl = ctrl)
+
+# Checking the variable importance
+varImp(rfProfile)
+
+rfProfile
+```
+
